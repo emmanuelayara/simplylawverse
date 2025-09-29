@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Email
 from wtforms import PasswordField
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 from flask_wtf.file import FileField, FileAllowed
 
 class CommentForm(FlaskForm):
@@ -38,8 +38,11 @@ class ArticleSubmissionForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     author = StringField('Author', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     category = SelectField('Category', choices=[], validators=[DataRequired()])
-    cover_image = FileField('Cover Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
-    document = FileField('Supporting Document', validators=[FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
+    cover_image = FileField('Cover Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'PNG', 'JPG', 'JPEG'], 'Images only!')])
+    document = FileField('Supporting Document', validators=[Optional(), FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
     submit = SubmitField('Submit')
+
+
+    

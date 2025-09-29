@@ -157,10 +157,25 @@ def register_routes(app):
         form = ArticleSubmissionForm()
         form.category.choices = [(cat, cat) for cat in [
             "Criminal Law", "Family Law", "Constitutional Law",
-            # ... rest of your categories ...
+            "Tech Law", "Property Law", "Administrative Law",
+            "International Law", "Contract Law", "Tort Law",
+            "Succession Law", "Corporate Law", "Commercial Law",
+            "Banking and Finance Law", "Securities Law", "Civil Litigation",
+            "Criminal Litigation", "Alternative Dispute Resolution", "Environmental Law",
+            "Energy Law", "Intellectual Property Law", "Copyright Law",
+            "Patent Law", "Trademark Law", "Trade Secrets Law",
+            "Labour and Employment Law", "Human Rights Law", "Health and Medical Law",
+            "Real Estate Law", "Transportation Law", "Cyber Law",
+            "Data Protection and Privacy Law", "Space Law", "Sports and Entertainment Law",
+            "Media and Communications Law", "Education Law", "Agricultural Law",
+            "Animal Law", "Maritime and Admiralty Law", "Immigration Law",
+            "Tax Law", "Military Law", "Bankruptcy Law",
+            "Consumer Protection Law", "Public Interest Law", "Customary and Indigenous Law"
         ]]
 
         if form.validate_on_submit():
+            print("✅ Form validated successfully!")
+            
             upload_folder = current_app.config['UPLOAD_FOLDER']
             os.makedirs(upload_folder, exist_ok=True)
 
@@ -171,6 +186,7 @@ def register_routes(app):
                     cover_image_filename = secure_filename(cover_image.filename)
                     full_path = os.path.join(upload_folder, cover_image_filename)
                     cover_image.save(full_path)
+                    print(f"✅ Saved cover image: {cover_image_filename}")
 
             document_filename = None
             if 'document' in request.files:
@@ -193,6 +209,15 @@ def register_routes(app):
             db.session.commit()
             flash('Article submitted successfully and is awaiting approval.', 'success')
             return redirect(url_for('home'))
+        
+        else:
+            if request.method == 'POST':
+                print("❌ Form validation FAILED!")
+                print(f"Form errors: {form.errors}")
+                # Flash the errors to the user
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        flash(f"{field}: {error}", 'danger')
 
         return render_template('submit_article.html', form=form)
 
