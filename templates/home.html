@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <h1 class="text-center mb-5 text-primary"><em>Welcome to the Lawverse</em></h1>
+          <figcaption class="blockquote-footer text-center">
+          Simply Lawverse; <b>Simplifying Law,</b> <cite title="Source Title">  Amplifying Justice.</cite>
+        </figcaption> <br>
+
+    <div class="mb-4">
+      <form method="get" action="{{ url_for('home') }}">
+        <div class="row g-2 align-items-center">
+          <div class="col-auto">
+            <label for="category" class="form-label mb-0 fw-bold">Filter by Category:</label>
+          </div>
+          <div class="col-auto">
+            <select class="form-select form-select-sm" name="category" onchange="this.form.submit()">
+              <option value="">All</option>
+              {% for cat in categories %}
+                <option value="{{ cat[0] }}" {% if selected_category == cat[0] %}selected{% endif %}>{{ cat[0] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <form method="get" action="{{ url_for('home') }}" class="search-form">
+      <style>.search-form {
+              margin-bottom: 20px;
+          }
+          .search-form input[type="text"] {
+              padding: 8px;
+              width: 250px;
+          }
+          .search-form button {
+              padding: 8px 12px;
+          }
+          .card-title a:hover {
+              color: #d35400;
+              text-decoration: underline;
+          }
+          .card:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+          }
+
+      </style>
+        <input type="text" name="search" placeholder="Search articles..." value="{{ search_query }}">
+        {% if selected_category %}
+            <input type="hidden" name="category" value="{{ selected_category }}">
+        {% endif %}
+        <button type="submit" class="btn btn-sm btn-outline-primary">Search</button>
+    </form>
+
+
+{% if articles.items %}
+  <div class="row">
+    <h2 class="mb-4 text-center" style="color: #278cdf;"><strong>New Articles</strong></h2>
+    {% for article in articles.items %}  {# ✅ Changed from articles to articles.items #}
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <a href="{{ url_for('read_more', article_id=article.id) }}"> 
+              <h5 class="card-title mb-0 text-white">{{ article.title }}</h5>
+            </a>
+            <small>by <em>{{ article.author }}</em></small>
+          </div>
+          <div class="card-body">
+            {% if article.cover_image %}
+              <img src="{{ url_for('static', filename='uploads/' + article.cover_image) }}" 
+                  class="img-fluid mb-3 rounded cover-image" 
+                  alt="Cover Image for {{ article.title }}">
+            {% endif %}
+            
+            <p class="card-text">
+              {{ article.content[:300] }}{% if article.content|length > 300 %}...{% endif %}
+            </p>
+            <a href="{{ url_for('read_more', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-muted text-center">No approved articles yet. Please check back soon.</p>
+{% endif %}
+
+<!-- Pagination Controls -->
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if articles.has_prev %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('home', page=articles.prev_num) }}">Previous</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+    {% endif %}
+
+    {% for page_num in articles.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if page_num %}
+        {% if page_num == articles.page %}
+          <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a></li>
+        {% endif %}
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if articles.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('home', page=articles.next_num) }}">Next</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}
