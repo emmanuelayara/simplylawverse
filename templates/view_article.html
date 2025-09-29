@@ -1,25 +1,417 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h2>{{ article.title }}</h2>
-  <p><em>By {{ article.author }}</em></p>
-  <hr>
-  <p>{{ article.content }}</p>
 
-  {% if article.image_filename %}
-    <div class="mt-3">
-      <img src="{{ url_for('static', filename='uploads/' + article.image_filename) }}" alt="Article Image" style="max-width: 100%; border-radius: 10px;">
-    </div>
-  {% endif %}
+<style>
+    /* Review Container */
+    .review-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
 
-  {% if article.document_filename %}
-    <div class="mt-3">
-      <a href="{{ url_for('static', filename='uploads/' + article.document_filename) }}" class="btn btn-outline-secondary" target="_blank">View Attached Document</a>
+    /* Review Card */
+    .review-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    /* Article Header */
+    .review-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 2rem;
+        color: white;
+    }
+
+    .review-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .review-author {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1rem;
+        font-style: italic;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .review-author i {
+        font-size: 1.1rem;
+    }
+
+    /* Article Content */
+    .review-content {
+        padding: 2rem;
+    }
+
+    .content-divider {
+        height: 3px;
+        background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+        border: none;
+        border-radius: 2px;
+        margin: 1.5rem 0;
+    }
+
+    .article-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #374151;
+        margin-bottom: 2rem;
+        white-space: pre-wrap;
+    }
+
+    /* Media Section */
+    .media-section {
+        margin: 2rem 0;
+    }
+
+    .media-label {
+        color: #1e3a8a;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .article-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .article-image:hover {
+        transform: scale(1.02);
+    }
+
+    .document-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 2rem;
+        background: white;
+        color: #1e3a8a;
+        border: 2px solid #1e3a8a;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(30, 58, 138, 0.2);
+    }
+
+    .document-link:hover {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color: white;
+        border-color: #1e3a8a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+    }
+
+    .document-link i {
+        font-size: 1.25rem;
+    }
+
+    /* Action Buttons */
+    .action-section {
+        background: #f9fafb;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-top: 2rem;
+    }
+
+    .action-title {
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .approve-btn {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+    }
+
+    .approve-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        color: white;
+    }
+
+    .disapprove-btn {
+        background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+    }
+
+    .disapprove-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        color: white;
+    }
+
+    .btn-icon {
+        font-size: 1.25rem;
+    }
+
+    /* Status Badge */
+    .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+        border: 2px solid #fbbf24;
+    }
+
+    /* Info Card */
+    .info-card {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        padding: 1.25rem;
+        border-radius: 15px;
+        border-left: 4px solid #3b82f6;
+        margin-bottom: 2rem;
+    }
+
+    .info-card-title {
+        color: #1e3a8a;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-card-text {
+        color: #1e40af;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+        .review-header {
+            padding: 1.5rem;
+        }
+
+        .review-title {
+            font-size: 1.5rem;
+        }
+
+        .review-content {
+            padding: 1.5rem;
+        }
+
+        .article-text {
+            font-size: 1rem;
+        }
+
+        .action-section {
+            padding: 1.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .approve-btn,
+        .disapprove-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .article-image {
+            max-height: 300px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .review-title {
+            font-size: 1.25rem;
+        }
+
+        .review-author {
+            font-size: 0.9rem;
+        }
+
+        .review-content {
+            padding: 1rem;
+        }
+
+        .action-title {
+            font-size: 1.1rem;
+        }
+
+        .media-label {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Loading Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .review-card {
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
+
+<div class="container review-container mt-4">
+    <!-- Info Card -->
+    <div class="info-card">
+        <div class="info-card-title">
+            <i class="fas fa-info-circle"></i>
+            Article Review
+        </div>
+        <p class="info-card-text">
+            Please review the article content below and make a decision to approve or disapprove.
+        </p>
     </div>
-  {% endif %}
-      <div>
-        <a href="{{ url_for('approve_article', article_id=article.id) }}" class="btn btn-sm btn-success">Approve</a>
-        <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Disapprove</a>
-      </div>
+
+    <!-- Review Card -->
+    <div class="review-card">
+        <!-- Header Section -->
+        <div class="review-header">
+            <h1 class="review-title">{{ article.title }}</h1>
+            <div class="review-author">
+                <i class="fas fa-user-edit"></i>
+                <span>By {{ article.author }}</span>
+            </div>
+            <span class="status-badge status-pending">
+                <i class="fas fa-clock me-1"></i>Pending Review
+            </span>
+        </div>
+
+        <!-- Content Section -->
+        <div class="review-content">
+            <hr class="content-divider">
+            
+            <p class="article-text">{{ article.content }}</p>
+
+            <!-- Image Section -->
+            {% if article.image_filename %}
+                <div class="media-section">
+                    <div class="media-label">
+                        <i class="fas fa-image"></i>
+                        Article Image
+                    </div>
+                    <img src="{{ url_for('static', filename='uploads/' + article.image_filename) }}" 
+                         alt="Article Image" 
+                         class="article-image"
+                         loading="lazy">
+                </div>
+            {% endif %}
+
+            <!-- Document Section -->
+            {% if article.document_filename %}
+                <div class="media-section">
+                    <div class="media-label">
+                        <i class="fas fa-file-alt"></i>
+                        Attached Document
+                    </div>
+                    <a href="{{ url_for('static', filename='uploads/' + article.document_filename) }}" 
+                       class="document-link" 
+                       target="_blank">
+                        <i class="fas fa-file-download"></i>
+                        <span>View Attached Document</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            {% endif %}
+
+            <!-- Action Section -->
+            <div class="action-section">
+                <div class="action-title">
+                    <i class="fas fa-gavel"></i>
+                    Make Your Decision
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ url_for('approve_article', article_id=article.id) }}" 
+                       class="approve-btn">
+                        <i class="fas fa-check-circle btn-icon"></i>
+                        <span>Approve Article</span>
+                    </a>
+                    <a href="{{ url_for('disapprove_article', article_id=article.id) }}" 
+                       class="disapprove-btn">
+                        <i class="fas fa-times-circle btn-icon"></i>
+                        <span>Disapprove Article</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Confirmation Script -->
+<script>
+    document.querySelectorAll('.approve-btn, .disapprove-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const action = this.classList.contains('approve-btn') ? 'approve' : 'disapprove';
+            const confirmed = confirm(`Are you sure you want to ${action} this article?`);
+            if (!confirmed) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
 {% endblock %}
