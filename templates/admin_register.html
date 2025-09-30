@@ -1,40 +1,564 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-  <div class="card shadow-lg p-4" style="width: 100%; max-width: 450px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 15px;">
-    <h3 class="text-center mb-4">🛡️ Register New Admin</h3>
+<style>
+    /* Register Container */
+    .register-wrapper {
+        min-height: 90vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    }
 
-    <form method="POST">
-      {{ form.hidden_tag() }}
+    /* Register Card */
+    .register-card {
+        width: 100%;
+        max-width: 500px;
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 10px 40px rgba(30, 58, 138, 0.15);
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease-out;
+    }
 
-      <div class="mb-3">
-        {{ form.username.label(class="form-label") }}
-        {{ form.username(class="form-control border-0 shadow-sm") }}
-      </div>
+    /* Card Header */
+    .register-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 2.5rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
 
-      <div class="mb-3">
-        {{ form.email.label(class="form-label") }}
-        {{ form.email(class="form-control border-0 shadow-sm") }}
-      </div>
+    .register-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 3s ease-in-out infinite;
+    }
 
-      <div class="mb-3">
-        {{ form.password.label(class="form-label") }}
-        {{ form.password(class="form-control border-0 shadow-sm") }}
-      </div>
+    .register-icon {
+        width: 70px;
+        height: 70px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
+    }
 
-      <div class="mb-3">
-        {{ form.confirm_password.label(class="form-label") }}
-        {{ form.confirm_password(class="form-control border-0 shadow-sm") }}
-      </div>
+    .register-icon i {
+        font-size: 2rem;
+        color: #1e3a8a;
+    }
 
-      <button type="submit" class="btn btn-light w-100 fw-bold shadow-sm mt-2">Register</button>
-    </form>
+    .register-title {
+        color: white;
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
+    }
 
-    <div class="text-center mt-3">
-      <small>Already an admin? <a href="{{ url_for('admin_login') }}" class="text-warning fw-bold text-decoration-none">Login here</a></small>
+    .register-subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
+        margin: 0.5rem 0 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Form Body */
+    .register-body {
+        padding: 2.5rem 2rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        color: #1e3a8a;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-label i {
+        color: #3b82f6;
+        font-size: 1rem;
+    }
+
+    /* Input Styling */
+    .form-control {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1rem 0.875rem 3rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+    }
+
+    .form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.15);
+        background: white;
+        outline: none;
+    }
+
+    /* Input Icons */
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+        font-size: 1.1rem;
+        pointer-events: none;
+        transition: color 0.3s ease;
+    }
+
+    .form-control:focus ~ .input-icon {
+        color: #3b82f6;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    /* Password Toggle */
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+    }
+
+    .password-toggle:hover {
+        color: #3b82f6;
+    }
+
+    /* Password Strength Indicator */
+    .password-strength {
+        margin-top: 0.5rem;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        overflow: hidden;
+        display: none;
+    }
+
+    .password-strength.active {
+        display: block;
+    }
+
+    .strength-bar {
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .strength-weak { width: 33%; background: #dc2626; }
+    .strength-medium { width: 66%; background: #f59e0b; }
+    .strength-strong { width: 100%; background: #059669; }
+
+    /* Helper Text */
+    .form-helper {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.375rem;
+    }
+
+    .form-helper i {
+        color: #3b82f6;
+        font-size: 0.75rem;
+        margin-top: 0.125rem;
+    }
+
+    /* Submit Button */
+    .register-button {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.05rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    .register-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .register-button:active {
+        transform: translateY(0);
+    }
+
+    /* Footer Links */
+    .register-footer {
+        text-align: center;
+        padding: 0 2rem 2rem;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.5rem 0;
+        color: #9ca3af;
+        font-size: 0.85rem;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .divider span {
+        padding: 0 1rem;
+    }
+
+    .login-link {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .login-link a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+        color: #1e3a8a;
+        text-decoration: underline;
+    }
+
+    /* Info Box */
+    .info-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #f59e0b;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        color: #92400e;
+    }
+
+    .info-box i {
+        margin-right: 0.5rem;
+        color: #f59e0b;
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 576px) {
+        .register-wrapper {
+            padding: 1rem 0.75rem;
+        }
+
+        .register-card {
+            max-width: 100%;
+            border-radius: 20px;
+        }
+
+        .register-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .register-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .register-icon i {
+            font-size: 1.75rem;
+        }
+
+        .register-title {
+            font-size: 1.5rem;
+        }
+
+        .register-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .register-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .register-footer {
+            padding: 0 1.5rem 2rem;
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            font-size: 0.95rem;
+        }
+
+        .input-icon {
+            font-size: 1rem;
+        }
+
+        .register-button {
+            padding: 0.875rem;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.05);
+            opacity: 0.8;
+        }
+    }
+
+    /* Loading State */
+    .register-button.loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .register-button.loading::after {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border: 2px solid white;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="register-wrapper">
+    <div class="register-card">
+        <!-- Header -->
+        <div class="register-header">
+            <div class="register-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h2 class="register-title">Create Admin Account</h2>
+            <p class="register-subtitle">Join the administration team</p>
+        </div>
+
+        <!-- Form Body -->
+        <div class="register-body">
+            <!-- Info Box -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Admin Access:</strong> This account will have full administrative privileges.
+            </div>
+
+            <form method="POST" id="registerForm">
+                {{ form.hidden_tag() }}
+
+                <!-- Username Field -->
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i>
+                        {{ form.username.label.text }}
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.username(class="form-control", placeholder="Choose a username", autocomplete="username") }}
+                        <i class="input-icon fas fa-user-circle"></i>
+                    </div>
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Must be unique and at least 3 characters
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        {{ form.email.label.text }}
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.email(class="form-control", placeholder="admin@example.com", autocomplete="email") }}
+                        <i class="input-icon fas fa-at"></i>
+                    </div>
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Use a valid email for account recovery
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i>
+                        {{ form.password.label.text }}
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.password(class="form-control", placeholder="Create a strong password", autocomplete="new-password", id="passwordField") }}
+                        <i class="input-icon fas fa-key"></i>
+                        <i class="password-toggle fas fa-eye" id="togglePassword"></i>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        At least 8 characters with letters and numbers
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">
+                        <i class="fas fa-lock"></i>
+                        {{ form.confirm_password.label.text }}
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.confirm_password(class="form-control", placeholder="Re-enter your password", autocomplete="new-password", id="confirmPasswordField") }}
+                        <i class="input-icon fas fa-check-circle"></i>
+                        <i class="password-toggle fas fa-eye" id="toggleConfirmPassword"></i>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="register-button" id="registerBtn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create Admin Account</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="register-footer">
+            <div class="divider">
+                <span>or</span>
+            </div>
+            <p class="login-link">
+                Already have an account? <a href="{{ url_for('admin_login') }}">Login here</a>
+            </p>
+        </div>
     </div>
-  </div>
 </div>
+
+<!-- Scripts -->
+<script>
+    // Password visibility toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('passwordField');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPasswordField = document.getElementById('confirmPasswordField');
+
+    if (togglePassword && passwordField) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
+    if (toggleConfirmPassword && confirmPasswordField) {
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
+    // Password strength indicator
+    const passwordStrength = document.getElementById('passwordStrength');
+    const strengthBar = document.getElementById('strengthBar');
+
+    if (passwordField && passwordStrength && strengthBar) {
+        passwordField.addEventListener('input', function() {
+            const value = this.value;
+            
+            if (value.length === 0) {
+                passwordStrength.classList.remove('active');
+                return;
+            }
+            
+            passwordStrength.classList.add('active');
+            
+            let strength = 0;
+            if (value.length >= 8) strength++;
+            if (/[a-z]/.test(value) && /[A-Z]/.test(value)) strength++;
+            if (/\d/.test(value)) strength++;
+            
+            strengthBar.className = 'strength-bar';
+            if (strength === 1) strengthBar.classList.add('strength-weak');
+            else if (strength === 2) strengthBar.classList.add('strength-medium');
+            else if (strength === 3) strengthBar.classList.add('strength-strong');
+        });
+    }
+
+    // Form submission loading state
+    const registerForm = document.getElementById('registerForm');
+    const registerBtn = document.getElementById('registerBtn');
+
+    if (registerForm && registerBtn) {
+        registerForm.addEventListener('submit', function() {
+            registerBtn.classList.add('loading');
+            registerBtn.querySelector('span').textContent = 'Creating account...';
+        });
+    }
+</script>
 
 {% endblock %}
