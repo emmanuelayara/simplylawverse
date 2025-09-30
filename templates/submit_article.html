@@ -1,105 +1,523 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div class="container mt-5 mb-5" style="max-width: 700px;">
-  <div class="card shadow-lg border-0 rounded">
-    <div class="card-body p-4">
-      <h2 class="text-center mb-4" style="color: #2c3e50;">📝 Submit an Article</h2>
+<style>
+    /* Submit Container */
+    .submit-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
 
-      <form method="POST" enctype="multipart/form-data">
+    /* Page Header */
+    .submit-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
 
-        {{ form.hidden_tag() }}
+    .submit-title {
+        color: #1e3a8a;
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
 
-        <div class="mb-3">
-          <label for="author" class="form-label fw-bold">{{ form.author.label }}</label>
-          {{ form.author(class="form-control", placeholder="Enter your full name") }}
-        </div>
+    .submit-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+        margin: 0;
+    }
 
-        <div class="mb-3">
-          <label for="email" class="form-label fw-bold">{{ form.email.label }}</label>
-          {{ form.email(class="form-control", placeholder="Enter your email address") }}
-        </div>
+    /* Form Card */
+    .submit-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
 
-        <div class="mb-3">
-          <label for="title" class="form-label fw-bold">{{ form.title.label }}</label>
-          {{ form.title(class="form-control", placeholder="Title of your article") }}
-        </div>
+    .card-header-section {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 1.5rem 2rem;
+        text-align: center;
+    }
 
-        <div class="mb-3">
-          <label for="content" class="form-label fw-bold">{{ form.content.label }}</label>
-          {{ form.content(class="form-control", rows="10", placeholder="Write your article here...") }}
-        </div>
+    .card-header-title {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
 
-        <div class="mb-3">
-          <label for="category" class="form-label">Category</label>
-          <select class="form-select" name="category" required>
-            <option value="">Select a Category</option>
-            <option value="Criminal Law">Criminal Law</option>
-            <option value="Family Law">Family Law</option>
-            <option value="Constitutional Law">Constitutional Law</option>
-            <option value="Tech Law">Tech Law</option>
-            <option value="Property Law">Property Law</option>
-            <option value="Administrative Law">Administrative Law</option>
-            <option value="International Law">International Law</option>
-            <option value="Contract Law">Contract Law</option>
-            <option value="Tort Law">Tort Law</option>
-            <option value="Succession Law">Succession Law</option>
-            <option value="Corporate Law">Corporate Law</option>
-            <option value="Commercial Law">Commercial Law</option>
-            <option value="Banking and Finance Law">Banking and Finance Law</option>
-            <option value="Securities Law">Securities Law</option>
-            <option value="Civil Litigation">Civil Litigation</option>
-            <option value="Criminal Litigation">Criminal Litigation</option>
-            <option value="Alternative Dispute Resolution">Alternative Dispute Resolution</option>
-            <option value="Environmental Law">Environmental Law</option>
-            <option value="Energy Law">Energy Law</option>
-            <option value="Intellectual Property Law">Intellectual Property Law</option>
-            <option value="Copyright Law">Copyright Law</option>
-            <option value="Patent Law">Patent Law</option>
-            <option value="Trademark Law">Trademark Law</option>
-            <option value="Trade Secrets Law">Trade Secrets Law</option>
-            <option value="Labour and Employment Law">Labour and Employment Law</option>
-            <option value="Human Rights Law">Human Rights Law</option>
-            <option value="Health and Medical Law">Health and Medical Law</option>
-            <option value="Real Estate Law">Real Estate Law</option>
-            <option value="Transportation Law">Transportation Law</option>
-            <option value="Cyber Law">Cyber Law</option>
-            <option value="Data Protection and Privacy Law">Data Protection and Privacy Law</option>
-            <option value="Space Law">Space Law</option>
-            <option value="Sports and Entertainment Law">Sports and Entertainment Law</option>
-            <option value="Media and Communications Law">Media and Communications Law</option>
-            <option value="Education Law">Education Law</option>
-            <option value="Agricultural Law">Agricultural Law</option>
-            <option value="Animal Law">Animal Law</option>
-            <option value="Maritime and Admiralty Law">Maritime and Admiralty Law</option>
-            <option value="Immigration Law">Immigration Law</option>
-            <option value="Tax Law">Tax Law</option>
-            <option value="Military Law">Military Law</option>
-            <option value="Bankruptcy Law">Bankruptcy Law</option>
-            <option value="Consumer Protection Law">Consumer Protection Law</option>
-            <option value="Public Interest Law">Public Interest Law</option>
-            <option value="Customary and Indigenous Law">Customary and Indigenous Law</option>
-          </select>
-        </div>
+    .card-header-text {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+        margin: 0.5rem 0 0;
+    }
 
+    /* Form Body */
+    .form-body {
+        padding: 2.5rem 2rem;
+    }
 
-        <div class="mb-3">
-          <label for="cover_image" class="form-label fw-bold">Cover Image</label>
-          <input type="file" name="cover_image" id="cover_image" class="form-control" accept=".jpg,.jpeg,.png">
-        </div>
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 1.75rem;
+    }
 
-        <div class="mb-3">
-          <label for="document" class="form-label fw-bold">Upload Article (optional, PDF/Word)</label>
-          <input type="file" name="document" class="form-control" accept=".pdf,.doc,.docx">
-        </div>
+    .form-label {
+        color: #1e3a8a;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-        <div class="d-grid mt-4">
-          <button type="submit" class="btn btn-primary btn-lg">📤 Submit Article</button>
-        </div>
-      </form>
+    .required-indicator {
+        color: #dc2626;
+        font-size: 0.875rem;
+    }
+
+    /* Form Controls */
+    .form-control,
+    .form-select {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.15);
+        background: white;
+        outline: none;
+    }
+
+    textarea.form-control {
+        min-height: 200px;
+        resize: vertical;
+    }
+
+    /* File Upload Styling */
+    .file-upload-wrapper {
+        position: relative;
+    }
+
+    .form-control[type="file"] {
+        padding: 0.75rem;
+        cursor: pointer;
+        background: white;
+    }
+
+    .form-control[type="file"]::file-selector-button {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-right: 1rem;
+    }
+
+    .form-control[type="file"]::file-selector-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Helper Text */
+    .form-helper {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .form-helper i {
+        color: #3b82f6;
+        font-size: 0.75rem;
+    }
+
+    /* Category Select Styling */
+    .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%231e3a8a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px 12px;
+        padding-right: 3rem;
+    }
+
+    /* Submit Button */
+    .submit-button {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        width: 100%;
+    }
+
+    .submit-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .submit-button:active {
+        transform: translateY(-1px);
+    }
+
+    /* Info Box */
+    .info-box {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border-left: 4px solid #3b82f6;
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .info-box-title {
+        color: #1e3a8a;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-box-text {
+        color: #1e40af;
+        font-size: 0.875rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Progress Indicator */
+    .form-progress {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+
+    .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        color: #9ca3af;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .progress-step::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 30px;
+        background: #e5e7eb;
+        border-radius: 50%;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-step.active {
+        color: #3b82f6;
+    }
+
+    .progress-step.active::before {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+        .form-body {
+            padding: 2rem 1.25rem;
+        }
+
+        .card-header-section {
+            padding: 1.25rem 1rem;
+        }
+
+        .card-header-title {
+            font-size: 1.25rem;
+        }
+
+        .submit-title {
+            font-size: 1.75rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 0.75rem 0.875rem;
+            font-size: 0.95rem;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+        }
+
+        .submit-button {
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .form-control[type="file"]::file-selector-button {
+            padding: 0.4rem 0.875rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .submit-title {
+            font-size: 1.5rem;
+        }
+
+        .card-header-title {
+            font-size: 1.1rem;
+        }
+
+        .form-body {
+            padding: 1.5rem 1rem;
+        }
+
+        .info-box {
+            padding: 1rem;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .submit-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+</style>
+
+<div class="container submit-container mt-5 mb-5">
+    <!-- Page Header -->
+    <div class="submit-header">
+        <h1 class="submit-title">
+            <i class="fas fa-pen-fancy"></i>
+            Submit an Article
+        </h1>
+        <p class="submit-subtitle">Share your legal insights with the community</p>
     </div>
-  </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+        <div class="info-box-title">
+            <i class="fas fa-info-circle"></i>
+            Submission Guidelines
+        </div>
+        <p class="info-box-text">
+            Your article will be reviewed by our team before publication. Please ensure all information is accurate and well-researched. Articles typically take 24-48 hours to review.
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="submit-card">
+        <div class="card-header-section">
+            <h2 class="card-header-title">Article Details</h2>
+            <p class="card-header-text">Fill in the information below to submit your article</p>
+        </div>
+
+        <div class="form-body">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                <!-- Author Name -->
+                <div class="form-group">
+                    <label for="author" class="form-label">
+                        <i class="fas fa-user"></i>
+                        {{ form.author.label }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {{ form.author(class="form-control", placeholder="Enter your full name", required=True) }}
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Your name as it will appear on the article
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        {{ form.email.label }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {{ form.email(class="form-control", placeholder="your.email@example.com", required=True) }}
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        We'll notify you about your article's status
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="title" class="form-label">
+                        <i class="fas fa-heading"></i>
+                        {{ form.title.label }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {{ form.title(class="form-control", placeholder="Enter a compelling title for your article", required=True) }}
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Make it clear and engaging
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="form-group">
+                    <label for="content" class="form-label">
+                        <i class="fas fa-file-alt"></i>
+                        {{ form.content.label }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {{ form.content(class="form-control", rows="12", placeholder="Write your article content here... Include all relevant information, analysis, and citations.", required=True) }}
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Minimum 300 words recommended
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label for="category" class="form-label">
+                        <i class="fas fa-folder"></i>
+                        Category
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <select class="form-select" name="category" required>
+                        <option value="">Choose a legal category...</option>
+                        <option value="Criminal Law">Criminal Law</option>
+                        <option value="Family Law">Family Law</option>
+                        <option value="Constitutional Law">Constitutional Law</option>
+                        <option value="Tech Law">Tech Law</option>
+                        <option value="Property Law">Property Law</option>
+                        <option value="Administrative Law">Administrative Law</option>
+                        <option value="International Law">International Law</option>
+                        <option value="Contract Law">Contract Law</option>
+                        <option value="Tort Law">Tort Law</option>
+                        <option value="Succession Law">Succession Law</option>
+                        <option value="Corporate Law">Corporate Law</option>
+                        <option value="Commercial Law">Commercial Law</option>
+                        <option value="Banking and Finance Law">Banking and Finance Law</option>
+                        <option value="Securities Law">Securities Law</option>
+                        <option value="Civil Litigation">Civil Litigation</option>
+                        <option value="Criminal Litigation">Criminal Litigation</option>
+                        <option value="Alternative Dispute Resolution">Alternative Dispute Resolution</option>
+                        <option value="Environmental Law">Environmental Law</option>
+                        <option value="Energy Law">Energy Law</option>
+                        <option value="Intellectual Property Law">Intellectual Property Law</option>
+                        <option value="Copyright Law">Copyright Law</option>
+                        <option value="Patent Law">Patent Law</option>
+                        <option value="Trademark Law">Trademark Law</option>
+                        <option value="Trade Secrets Law">Trade Secrets Law</option>
+                        <option value="Labour and Employment Law">Labour and Employment Law</option>
+                        <option value="Human Rights Law">Human Rights Law</option>
+                        <option value="Health and Medical Law">Health and Medical Law</option>
+                        <option value="Real Estate Law">Real Estate Law</option>
+                        <option value="Transportation Law">Transportation Law</option>
+                        <option value="Cyber Law">Cyber Law</option>
+                        <option value="Data Protection and Privacy Law">Data Protection and Privacy Law</option>
+                        <option value="Space Law">Space Law</option>
+                        <option value="Sports and Entertainment Law">Sports and Entertainment Law</option>
+                        <option value="Media and Communications Law">Media and Communications Law</option>
+                        <option value="Education Law">Education Law</option>
+                        <option value="Agricultural Law">Agricultural Law</option>
+                        <option value="Animal Law">Animal Law</option>
+                        <option value="Maritime and Admiralty Law">Maritime and Admiralty Law</option>
+                        <option value="Immigration Law">Immigration Law</option>
+                        <option value="Tax Law">Tax Law</option>
+                        <option value="Military Law">Military Law</option>
+                        <option value="Bankruptcy Law">Bankruptcy Law</option>
+                        <option value="Consumer Protection Law">Consumer Protection Law</option>
+                        <option value="Public Interest Law">Public Interest Law</option>
+                        <option value="Customary and Indigenous Law">Customary and Indigenous Law</option>
+                    </select>
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Select the most relevant category
+                    </div>
+                </div>
+
+                <!-- Cover Image -->
+                <div class="form-group">
+                    <label for="cover_image" class="form-label">
+                        <i class="fas fa-image"></i>
+                        Cover Image
+                    </label>
+                    <input type="file" name="cover_image" id="cover_image" class="form-control" accept=".jpg,.jpeg,.png,.JPG,.JPEG,.PNG">
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Recommended: 1200x630px (JPG, PNG)
+                    </div>
+                </div>
+
+                <!-- Document Upload -->
+                <div class="form-group">
+                    <label for="document" class="form-label">
+                        <i class="fas fa-file-pdf"></i>
+                        Supporting Document (Optional)
+                    </label>
+                    <input type="file" name="document" class="form-control" accept=".pdf,.doc,.docx">
+                    <div class="form-helper">
+                        <i class="fas fa-circle"></i>
+                        Upload additional resources (PDF, Word)
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Submit Article for Review</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
-
