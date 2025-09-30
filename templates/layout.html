@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='simplylawverse.png') }}">
     <meta charset="UTF-8">
-    <title>Simply Law-verse</title>
+    <title>Simply Lawverse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
@@ -306,7 +307,7 @@
         <div class="container">
             <a class="navbar-brand" href="/">
                 <img src="/static/simplylawverse.png" alt="Simply Law-verse Logo">
-                <span class="d-none d-sm-inline">Simply Law-verse</span>
+                <span class="d-none d-sm-inline">Simply Lawverse</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -332,6 +333,7 @@
                             </a>
                         </li>
                     {% else %}
+<!--
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin_login') }}">
                                 <i class="fas fa-sign-in-alt me-1"></i>Login
@@ -342,6 +344,7 @@
                                 <i class="fas fa-user-plus me-1"></i>Register
                             </a>
                         </li>
+-->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('about') }}">
                                 <i class="fas fa-info-circle me-1"></i>About
@@ -396,7 +399,7 @@
         <div class="container footer-content">
             <div class="text-center">
                 <div class="footer-brand">
-                    <i class="fas fa-balance-scale me-2"></i>Simply Law-verse
+                    <i class="fas fa-balance-scale me-2"></i>Simply Lawverse
                 </div>
                 
                 <div class="footer-links">
@@ -434,7 +437,7 @@
                 </div>
 
                 <div class="footer-copyright">
-                    &copy; {{ current_year or '2025' }} <strong>Simply Law-verse</strong>. All rights reserved.
+                    &copy; {{ current_year or '2025' }} <strong>Simply Lawverse</strong>. All rights reserved.
                 </div>
             </div>
         </div>
