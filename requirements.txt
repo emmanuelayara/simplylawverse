@@ -1,3 +1,4 @@
+setuptools>=68.0.0
 absl-py==2.3.1
 addict==2.4.0
 albucore==0.0.24
