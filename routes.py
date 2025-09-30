@@ -69,7 +69,7 @@ def register_routes(app):
         page = request.args.get('page', 1, type=int)
         category = request.args.get('category')
         search_query = request.args.get('search', '', type=str)
-        per_page = 5
+        per_page = 6
 
         query = Article.query.filter(Article.status == 'approved')
 
