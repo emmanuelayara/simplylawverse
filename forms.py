@@ -43,6 +43,3 @@ class ArticleSubmissionForm(FlaskForm):
     cover_image = FileField('Cover Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'PNG', 'JPG', 'JPEG'], 'Images only!')])
     document = FileField('Supporting Document', validators=[Optional(), FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
     submit = SubmitField('Submit')
-
-
-    
