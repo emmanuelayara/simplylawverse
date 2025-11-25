@@ -721,7 +721,7 @@ html {
                             {% endif %}
                             
                             <p class="article-text">
-                                {{ article.content[:300] }}{% if article.content|length > 300 %}...{% endif %}
+                                {{ article.content[:150] }}{% if article.content|length > 150 %}...{% endif %}
                             </p>
                             
                             <a href="{{ url_for('read_more', article_id=article.id) }}" class="read-more-btn">
