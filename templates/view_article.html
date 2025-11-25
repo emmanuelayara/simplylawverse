@@ -345,7 +345,7 @@
         <div class="review-content">
             <hr class="content-divider">
             
-            <p class="article-text">{{ article.content }}</p>
+            <p class="article-text">{{ article.content|safe }}</p>
 
             <!-- Image Section -->
             {% if article.image_filename %}
