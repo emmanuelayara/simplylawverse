@@ -1,0 +1,42 @@
+2026-01-04 20:04:38,900 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:05:02,790 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:05:02,984 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:05:02,984 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:06:25,550 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:06:25,737 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:06:25,737 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:06:25,774 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:06:25,774 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:06:25,774 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:10:30,347 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:10:30,547 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:10:30,547 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:13:55,366 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:13:55,562 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:13:55,562 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:24:18,636 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:24:40,515 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:24:40,830 ERROR: Exception on /submit [POST] [in C:\Users\ayara\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py:875]
+Traceback (most recent call last):
+  File "C:\Users\ayara\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ayara\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ayara\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ayara\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ayara\Documents\Python\Simplylawverse\blueprints\articles.py", line 139, in submit_article
+    logger.warning(f"Article form validation failed for {current_user.username}: {form.errors}")
+                                                         ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUserMixin' object has no attribute 'username'
+2026-01-04 20:25:04,393 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:25:47,349 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:27:53,599 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 20:35:01,562 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 21:01:35,770 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]
+2026-01-04 21:02:14,894 INFO: Simplylawverse startup [in C:\Users\ayara\Documents\Python\Simplylawverse\logger.py:23]

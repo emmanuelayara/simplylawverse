@@ -557,13 +557,20 @@
 
             <!-- Action Section -->
             <div class="action-section">
-                <form action="{{ url_for('like_article', article_id=article.id) }}" method="post">
+                <form action="{{ url_for('articles.like_article', article_id=article.id) }}" method="post" style="display: inline;">
                     <button type="submit" class="like-btn">
                         <i class="fas fa-heart"></i>
                         <span>Like</span>
                         <span class="like-count">{{ article.likes }}</span>
                     </button>
                 </form>
+                
+                {% if current_user.is_authenticated and (current_user.username == article.author or current_user.is_admin) %}
+                    <a href="{{ url_for('articles.edit_article', article_id=article.id) }}" class="like-btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit</span>
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -630,7 +637,7 @@
                 </h6>
             </div>
             <div class="comment-form-body">
-                <form method="POST" action="{{ url_for('comment', article_id=article.id) }}">
+                <form method="POST" action="{{ url_for('comments.post_comment', article_id=article.id) }}">
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="fas fa-user me-1"></i>Your Name
@@ -654,66 +661,149 @@
         </div>
 
         <!-- Comments Display -->
-        {% macro render_comment(comment, level=0) %}
-            <div class="comment-card comment-level-{{ level }}">
-                <div class="comment-body">
-                    <div class="comment-author">
-                        <i class="fas fa-user-circle"></i>
-                        {{ comment.name }}
-                    </div>
-                    <p class="comment-text">{{ comment.content }}</p>
-                    <div class="comment-date">
-                        <i class="far fa-clock"></i>
-                        {{ comment.date_posted.strftime('%B %d, %Y at %I:%M %p') if comment.date_posted else '' }}
-                    </div>
-
-                    <a href="#" class="reply-link" data-comment-id="{{ comment.id }}">
-                        <i class="fas fa-reply"></i>Reply
-                    </a>
-
-                    <form method="POST" 
-                          action="{{ url_for('comment', article_id=article.id) }}" 
-                          class="reply-form d-none" 
-                          id="reply-form-{{ comment.id }}">
-                        <div class="mb-2">
-                            <input type="text" 
-                                   class="form-control form-control-sm" 
-                                   name="name" 
-                                   placeholder="Your Name" 
-                                   required>
-                        </div>
-                        <div class="mb-2">
-                            <textarea class="form-control form-control-sm" 
-                                      name="comment" 
-                                      rows="2" 
-                                      placeholder="Write your reply..." 
-                                      required></textarea>
-                        </div>
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <div class="text-end">
-                            <button type="submit" class="reply-btn">
-                                <i class="fas fa-paper-plane me-1"></i>Reply
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            {% for reply in comment.replies %}
-                {{ render_comment(reply, level + 1) }}
-            {% endfor %}
-        {% endmacro %}
-
         <div class="comments-section">
-            {% if comments %}
+            {% if paginated_comments.items %}
                 <h4 class="section-header">
                     <i class="fas fa-comments"></i>
                     Comments
-                    <span class="comment-count">{{ comments|length }}</span>
+                    <span class="comment-count">{{ paginated_comments.total }}</span>
                 </h4>
-                {% for comment in comments if not comment.parent_id %}
-                    {{ render_comment(comment) }}
+                {% for comment in paginated_comments.items %}
+                    <div id="comment-{{ comment.id }}" class="comment-card comment-level-0">
+                        <div class="comment-body">
+                            {% if comment.is_deleted() %}
+                                <div class="alert alert-light text-muted">
+                                    <i class="fas fa-trash"></i> This comment has been deleted by the author.
+                                </div>
+                            {% else %}
+                                <div class="comment-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    {{ comment.name }}
+                                </div>
+                                <p class="comment-text">{{ comment.content }}</p>
+                                <div class="comment-date">
+                                    <i class="far fa-clock"></i>
+                                    {{ comment.date_posted.strftime('%B %d, %Y at %I:%M %p') if comment.date_posted else '' }}
+                                </div>
+
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-outline-primary reply-btn" data-comment-id="{{ comment.id }}">
+                                        <i class="fas fa-reply"></i> Reply
+                                    </button>
+                                    {% if current_user.is_authenticated and (current_user.is_admin or current_user.username == comment.name) %}
+                                        <form method="POST" action="{{ url_for('comments.soft_delete_comment', comment_id=comment.id) }}" style="display: inline;">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this comment?')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+
+                                <!-- ✅ Threaded replies section -->
+                                {% if comment.replies.count() > 0 %}
+                                    <div class="mt-3 ps-4 border-start">
+                                        <h6 class="mb-3 text-muted">💬 Replies ({{ comment.replies.count() }})</h6>
+                                        {% for reply in comment.replies %}
+                                            {% if not reply.is_deleted() %}
+                                                <div class="comment-card comment-level-1 mb-2">
+                                                    <div class="comment-body">
+                                                        <div class="comment-author">
+                                                            <i class="fas fa-user-circle"></i>
+                                                            {{ reply.name }}
+                                                        </div>
+                                                        <p class="comment-text">{{ reply.content }}</p>
+                                                        <div class="comment-date">
+                                                            <i class="far fa-clock"></i>
+                                                            {{ reply.date_posted.strftime('%B %d, %Y at %I:%M %p') if reply.date_posted else '' }}
+                                                        </div>
+                                                        {% if current_user.is_authenticated and (current_user.is_admin or current_user.username == reply.name) %}
+                                                            <form method="POST" action="{{ url_for('comments.soft_delete_comment', comment_id=reply.id) }}" style="display: inline;">
+                                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this reply?')">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <!-- ✅ Reply form for threading -->
+                                <form method="POST" 
+                                      action="{{ url_for('comments.reply_to_comment', parent_id=comment.id) }}" 
+                                      class="reply-form d-none mt-3" 
+                                      id="reply-form-{{ comment.id }}">
+                                    <div class="mb-2">
+                                        <label class="form-label form-label-sm">Your Name</label>
+                                        <input type="text" 
+                                               class="form-control form-control-sm" 
+                                               name="name" 
+                                               placeholder="Enter your name" 
+                                               required>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label form-label-sm">Email (optional)</label>
+                                        <input type="email" 
+                                               class="form-control form-control-sm" 
+                                               name="email" 
+                                               placeholder="your@email.com">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label form-label-sm">Reply</label>
+                                        <textarea class="form-control form-control-sm" 
+                                                  name="reply" 
+                                                  rows="3" 
+                                                  placeholder="Write your reply..." 
+                                                  required></textarea>
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-sm btn-secondary cancel-reply">Cancel</button>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-paper-plane me-1"></i>Reply
+                                        </button>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
                 {% endfor %}
+
+                <!-- ✅ Pagination -->
+                {% if paginated_comments.pages > 1 %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if paginated_comments.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('articles.read_more', article_id=article.id, page=paginated_comments.prev_num) }}">← Previous</a>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in paginated_comments.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num == paginated_comments.page %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('articles.read_more', article_id=article.id, page=page_num) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if paginated_comments.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('articles.read_more', article_id=article.id, page=paginated_comments.next_num) }}">Next →</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
             {% else %}
                 <div class="empty-comments">
                     <i class="far fa-comments"></i>
@@ -726,13 +816,19 @@
 
 <!-- Scripts -->
 <script>
-    // Toggle reply form
-    document.querySelectorAll('.reply-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
+    // ✅ Toggle reply form
+    document.querySelectorAll('.reply-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
             const commentId = this.getAttribute('data-comment-id');
             const form = document.getElementById(`reply-form-${commentId}`);
             form.classList.toggle('d-none');
+        });
+    });
+
+    // ✅ Cancel reply form
+    document.querySelectorAll('.cancel-reply').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.reply-form').classList.add('d-none');
         });
     });
 

@@ -1,0 +1,634 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<style>
+    /* Form Container */
+    .form-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        border-bottom: 2px solid #dbeafe;
+        padding-bottom: 1.5rem;
+    }
+
+    .form-title {
+        color: #1e3a8a;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .form-title i {
+        color: #3b82f6;
+        font-size: 2.2rem;
+    }
+
+    .form-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Form Section */
+    .form-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        color: #3b82f6;
+        font-size: 1.4rem;
+    }
+
+    /* Form Group Styling */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: #1f2937;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-label i {
+        color: #3b82f6;
+        font-size: 1.1rem;
+    }
+
+    .form-control,
+    .form-control textarea,
+    .form-select {
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-control:focus,
+    .form-control textarea:focus,
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 250px;
+    }
+
+    .form-text {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+    }
+
+    /* File Input */
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .file-input {
+        border: 2px dashed #3b82f6;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f0f9ff;
+    }
+
+    .file-input:hover {
+        border-color: #2563eb;
+        background: #e0f2fe;
+    }
+
+    .file-input i {
+        font-size: 2.5rem;
+        color: #3b82f6;
+        margin-bottom: 1rem;
+    }
+
+    /* Error Messages */
+    .error-message {
+        color: #dc2626;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Alert Messages */
+    .alert {
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: 2px solid;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        border-color: #6ee7b7;
+        color: #047857;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #dc2626;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1e40af;
+    }
+
+    .alert i {
+        margin-right: 0.5rem;
+    }
+
+    /* Character Counter */
+    .char-counter {
+        color: #6b7280;
+        font-size: 0.85rem;
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+
+    .char-counter.warning {
+        color: #f59e0b;
+    }
+
+    .char-counter.danger {
+        color: #dc2626;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #e5e7eb;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        flex: 1;
+        min-width: 150px;
+        padding: 0.875rem 2rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        color: white;
+    }
+
+    .btn-cancel {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(107, 114, 128, 0.3);
+    }
+
+    .btn-cancel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .form-container {
+            margin: 1rem auto;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            min-width: auto;
+        }
+
+        textarea.form-control {
+            min-height: 200px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-card {
+            padding: 1.25rem;
+        }
+
+        .form-title {
+            font-size: 1.25rem;
+            gap: 0.5rem;
+        }
+
+        .form-title i {
+            font-size: 1.75rem;
+        }
+
+        .form-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+        }
+
+        textarea.form-control {
+            min-height: 180px;
+        }
+
+        .file-input {
+            padding: 1.5rem;
+        }
+
+        .file-input i {
+            font-size: 2rem;
+        }
+    }
+
+    /* Loading Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-card {
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
+
+<div class="form-container">
+    <!-- Form Card -->
+    <div class="form-card">
+        <!-- Form Header -->
+        <div class="form-header">
+            <h1 class="form-title">
+                <i class="fas fa-pencil-alt"></i>
+                Edit Article
+            </h1>
+            <p class="form-subtitle">Update your article content and metadata</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'info' }}">
+                        <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' if category == 'danger' else 'info-circle' }}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Edit Article Form -->
+        <form method="POST" action="{{ url_for('articles.edit_article', article_id=article.id) }}" enctype="multipart/form-data" novalidate>
+            {{ form.hidden_tag() }}
+
+            <!-- Article Details Section -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-heading"></i>
+                    Article Details
+                </h2>
+
+                <!-- Title Field -->
+                <div class="form-group">
+                    {{ form.title.label(class="form-label") }}
+                    {% if form.title.errors %}
+                        {{ form.title(class="form-control is-invalid") }}
+                        <div class="error-message">
+                            <i class="fas fa-times-circle"></i>
+                            {{ form.title.errors[0] }}
+                        </div>
+                    {% else %}
+                        {{ form.title(class="form-control", placeholder="Enter article title") }}
+                        <small class="form-text">
+                            <i class="fas fa-lightbulb"></i>
+                            A clear, descriptive title helps readers understand your article
+                        </small>
+                    {% endif %}
+                </div>
+
+                <!-- Category Field -->
+                <div class="form-group">
+                    {{ form.category.label(class="form-label") }}
+                    {% if form.category.errors %}
+                        {{ form.category(class="form-select is-invalid") }}
+                        <div class="error-message">
+                            <i class="fas fa-times-circle"></i>
+                            {{ form.category.errors[0] }}
+                        </div>
+                    {% else %}
+                        {{ form.category(class="form-select", id="category-select") }}
+                        <small class="form-text">
+                            <i class="fas fa-tag"></i>
+                            Choose the category that best fits your article
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Article Content
+                </h2>
+
+                <!-- Content Field -->
+                <div class="form-group">
+                    {{ form.content.label(class="form-label") }}
+                    {% if form.content.errors %}
+                        {{ form.content(class="form-control is-invalid", rows=12, placeholder="Write your article content here...") }}
+                        <div class="error-message">
+                            <i class="fas fa-times-circle"></i>
+                            {{ form.content.errors[0] }}
+                        </div>
+                    {% else %}
+                        {{ form.content(class="form-control", rows=12, placeholder="Write your article content here...") }}
+                        <div class="char-counter">
+                            <span id="char-count">0</span> / 50,000 characters
+                        </div>
+                        <small class="form-text">
+                            <i class="fas fa-pen"></i>
+                            Minimum 50 characters, maximum 50,000 characters
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Media Section -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-image"></i>
+                    Media Attachments
+                </h2>
+
+                <!-- Cover Image Field -->
+                <div class="form-group">
+                    {{ form.cover_image.label(class="form-label") }}
+                    <div class="file-input-wrapper">
+                        <div class="file-input" onclick="document.getElementById('cover-image').click()">
+                            <i class="fas fa-image"></i>
+                            <p><strong>Click to upload</strong> or drag and drop</p>
+                            <small>PNG, JPG, GIF (max 5MB)</small>
+                            {{ form.cover_image(id="cover-image", style="display: none;") }}
+                        </div>
+                    </div>
+                    {% if article.image_filename %}
+                        <small class="form-text mt-2">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            Current image: {{ article.image_filename }}
+                        </small>
+                    {% endif %}
+                    {% if form.cover_image.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-times-circle"></i>
+                            {{ form.cover_image.errors[0] }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Document Field -->
+                <div class="form-group">
+                    {{ form.document.label(class="form-label") }}
+                    <div class="file-input-wrapper">
+                        <div class="file-input" onclick="document.getElementById('document-file').click()">
+                            <i class="fas fa-file-pdf"></i>
+                            <p><strong>Click to upload</strong> or drag and drop</p>
+                            <small>PDF, DOC, DOCX (max 10MB)</small>
+                            {{ form.document(id="document-file", style="display: none;") }}
+                        </div>
+                    </div>
+                    {% if article.document_filename %}
+                        <small class="form-text mt-2">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            Current document: {{ article.document_filename }}
+                        </small>
+                    {% endif %}
+                    {% if form.document.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-times-circle"></i>
+                            {{ form.document.errors[0] }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn-action btn-save">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+                <a href="{{ url_for('articles.read_more', article_id=article.id) }}" class="btn-action btn-cancel">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </a>
+                <button type="button" class="btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash"></i>
+                    Delete Article
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-danger">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Delete Article
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">
+                    <strong>Are you sure you want to delete this article?</strong>
+                </p>
+                <p class="text-muted mt-2 mb-0">
+                    This action cannot be undone. All comments associated with this article will also be removed.
+                </p>
+                <div class="alert alert-warning mt-3 mb-0">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Article:</strong> {{ article.title }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{{ url_for('articles.delete_article', article_id=article.id) }}" style="display: inline;">
+                    {{ form.hidden_tag() }}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Character Counter Script -->
+<script>
+    const contentField = document.getElementById('content');
+    const charCount = document.getElementById('char-count');
+
+    if (contentField) {
+        function updateCharCount() {
+            const count = contentField.value.length;
+            charCount.textContent = count;
+            
+            // Show warning at 80%
+            if (count > 40000) {
+                charCount.parentElement.classList.add('warning');
+            } else if (count > 49000) {
+                charCount.parentElement.classList.add('danger');
+            } else {
+                charCount.parentElement.classList.remove('warning', 'danger');
+            }
+        }
+
+        contentField.addEventListener('input', updateCharCount);
+        // Initial count
+        updateCharCount();
+    }
+
+    // Drag and drop for file inputs
+    ['cover-image', 'document-file'].forEach(id => {
+        const input = document.getElementById(id);
+        const wrapper = input.closest('.file-input-wrapper');
+        const display = wrapper.querySelector('.file-input');
+
+        if (wrapper && display) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                display.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                display.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                display.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                display.style.borderColor = '#2563eb';
+                display.style.background = '#e0f2fe';
+            }
+
+            function unhighlight(e) {
+                display.style.borderColor = '#3b82f6';
+                display.style.background = '#f0f9ff';
+            }
+
+            display.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                input.files = files;
+            }
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Services Header -->
+<section class="bg-law-dark text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold mb-4">Corporate Legal Services</h1>
+        <p class="text-xl text-gray-300">Comprehensive legal solutions for Nigerian businesses</p>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for service in services %}
+            <div class="bg-law-gray rounded-lg p-8 border border-gray-200 hover:shadow-lg hover:border-law-blue transition">
+                <div class="w-12 h-12 bg-law-blue text-white rounded-lg mb-4 flex items-center justify-center font-bold text-lg">
+                    {{ loop.index }}
+                </div>
+                <h2 class="text-2xl font-bold text-law-dark mb-3">{{ service.name }}</h2>
+                <p class="text-gray-600 mb-6">{{ service.description }}</p>
+                
+                <div class="space-y-3 mb-6">
+                    <div>
+                        <p class="font-semibold text-law-dark text-sm">Timeline:</p>
+                        <p class="text-gray-600">{{ service.typical_timeline }}</p>
+                    </div>
+                    {% if service.base_price %}
+                    <div>
+                        <p class="font-semibold text-law-dark text-sm">Starting From:</p>
+                        <p class="text-law-gold font-bold">₦{{ "{:,.0f}".format(service.base_price) }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <a href="{{ url_for('services.service_detail', slug=service.slug) }}" class="inline-block w-full py-2 bg-law-blue text-white font-bold rounded text-center hover:bg-opacity-90 transition mb-3">
+                    Learn More
+                </a>
+                <a href="{{ url_for('bookings.index') }}" class="inline-block w-full py-2 border-2 border-law-blue text-law-blue font-bold rounded text-center hover:bg-law-blue hover:text-white transition">
+                    Book Consultation
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-16 bg-law-gray">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-law-dark mb-12 text-center">Frequently Asked Questions</h2>
+        
+        <div class="space-y-6">
+            <!-- FAQ Item 1 -->
+            <details class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer group">
+                <summary class="font-bold text-law-dark text-lg flex justify-between items-center">
+                    <span>How do I choose the right service for my needs?</span>
+                    <span class="text-law-gold group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <p class="text-gray-600 mt-4">
+                    Contact us for a preliminary consultation where we assess your business needs and recommend the most appropriate service. Each service is tailored to address specific corporate legal requirements.
+                </p>
+            </details>
+            
+            <!-- FAQ Item 2 -->
+            <details class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer group">
+                <summary class="font-bold text-law-dark text-lg flex justify-between items-center">
+                    <span>What is the typical cost for legal services?</span>
+                    <span class="text-law-gold group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <p class="text-gray-600 mt-4">
+                    Costs vary based on the service complexity and scope. We offer flexible consultation packages starting from ₦15,000. Custom projects are quoted based on requirements.
+                </p>
+            </details>
+            
+            <!-- FAQ Item 3 -->
+            <details class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer group">
+                <summary class="font-bold text-law-dark text-lg flex justify-between items-center">
+                    <span>Can I get legal advice for my startup?</span>
+                    <span class="text-law-gold group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <p class="text-gray-600 mt-4">
+                    Yes! We specialize in startup legal needs, from company registration to governance frameworks. We offer affordable consultation and retainer packages designed for growing businesses.
+                </p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 bg-law-dark text-white text-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-6">Ready to Get Legal Support?</h2>
+        <p class="text-lg text-gray-300 mb-8">Schedule a consultation with our corporate lawyer today</p>
+        <a href="{{ url_for('bookings.index') }}" class="inline-block px-8 py-4 bg-law-gold text-law-dark font-bold rounded hover:bg-opacity-90 transition">
+            Book Consultation
+        </a>
+    </div>
+</section>
+
+{% endblock %}

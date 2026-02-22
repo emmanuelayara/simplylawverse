@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}My Drafts{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>📝 My Article Drafts</h1>
+    <p class="text-muted">Manage your draft articles before publishing.</p>
+
+    {% if drafts %}
+        <div class="row">
+            {% for draft in drafts %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ draft.title }}</h5>
+                            <p class="card-text text-muted">{{ draft.content[:100] }}...</p>
+                            
+                            <div class="mb-2">
+                                <span class="badge bg-secondary">{{ draft.category }}</span>
+                                <span class="badge bg-warning text-dark">📝 Draft</span>
+                            </div>
+
+                            <p class="small text-muted">
+                                Last updated: {{ draft.date_submitted.strftime('%Y-%m-%d %H:%M') }}
+                            </p>
+
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('articles.edit_draft', article_id=draft.id) }}" class="btn btn-sm btn-primary">
+                                    ✏️ Edit
+                                </a>
+                                <form action="{{ url_for('articles.submit_draft', article_id=draft.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-success">📤 Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-4">
+            📝 You have no drafts yet. <a href="{{ url_for('articles.create_draft') }}" class="alert-link">Create your first draft</a>
+        </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{{ url_for('articles.create_draft') }}" class="btn btn-primary">➕ Create New Draft</a>
+    </div>
+</div>
+{% endblock %}

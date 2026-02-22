@@ -1,0 +1,425 @@
+<!-- Lazy Loading & Image Optimization Script -->
+
+<script>
+    /**
+     * Lazy Loading Manager
+     * Implements native lazy loading with Intersection Observer fallback
+     */
+    class LazyLoadManager {
+        constructor(options = {}) {
+            this.options = {
+                rootMargin: options.rootMargin || '50px',
+                threshold: options.threshold || 0.01,
+                enableIntersectionObserver: true,
+                placeholderColor: options.placeholderColor || '#f0f0f0'
+            };
+
+            this.init();
+        }
+
+        init() {
+            // Check browser support for native lazy loading
+            const img = document.createElement('img');
+            this.supportsNativeLazyLoad = 'loading' in img;
+
+            // Set up Intersection Observer for better control
+            this.setupIntersectionObserver();
+
+            // Process all lazy-loadable images
+            this.processImages();
+
+            // Listen for dynamically added images
+            this.observeDynamicImages();
+        }
+
+        /**
+         * Set up Intersection Observer for progressive image loading
+         */
+        setupIntersectionObserver() {
+            if (!('IntersectionObserver' in window)) {
+                console.warn('IntersectionObserver not supported, using native lazy loading only');
+                return;
+            }
+
+            this.observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        this.loadImage(entry.target);
+                        this.observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: this.options.rootMargin,
+                threshold: this.options.threshold
+            });
+        }
+
+        /**
+         * Process all images in the DOM
+         */
+        processImages() {
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                this.prepareImage(img);
+            });
+        }
+
+        /**
+         * Prepare an image for lazy loading
+         */
+        prepareImage(img) {
+            // Add loading attribute
+            if (this.supportsNativeLazyLoad) {
+                img.loading = 'lazy';
+            }
+
+            // Set placeholder background
+            img.style.backgroundColor = this.options.placeholderColor;
+
+            // Use Intersection Observer
+            if (this.observer) {
+                this.observer.observe(img);
+            } else {
+                // Fallback: load immediately
+                this.loadImage(img);
+            }
+        }
+
+        /**
+         * Load an image
+         */
+        loadImage(img) {
+            const src = img.dataset.src;
+            const srcset = img.dataset.srcset;
+
+            if (src) {
+                img.src = src;
+            }
+
+            if (srcset) {
+                img.srcset = srcset;
+            }
+
+            // Add fade-in animation
+            img.classList.add('lazy-loaded');
+
+            // Handle load event
+            img.addEventListener('load', () => {
+                img.classList.add('image-loaded');
+            });
+
+            // Handle error
+            img.addEventListener('error', () => {
+                img.classList.add('image-error');
+                img.src = '/static/images/image-error.png';
+            });
+        }
+
+        /**
+         * Observe DOM for dynamically added images
+         */
+        observeDynamicImages() {
+            if (!('MutationObserver' in window)) {
+                return;
+            }
+
+            const mutationObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            if (node.tagName === 'IMG' && node.dataset.src) {
+                                this.prepareImage(node);
+                            }
+
+                            // Check children
+                            node.querySelectorAll?.('img[data-src]').forEach(img => {
+                                this.prepareImage(img);
+                            });
+                        }
+                    });
+                });
+            });
+
+            mutationObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        /**
+         * Force load all images (useful for print preview)
+         */
+        loadAllImages() {
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                this.loadImage(img);
+                if (this.observer) {
+                    this.observer.unobserve(img);
+                }
+            });
+        }
+    }
+
+    /**
+     * Progressive Image Loader
+     * For images with placeholder to final version transition
+     */
+    class ProgressiveImageLoader {
+        constructor(imageSelector = 'img[data-src]') {
+            this.imageSelector = imageSelector;
+            this.images = [];
+            this.init();
+        }
+
+        init() {
+            this.setupStyles();
+            this.loadImages();
+        }
+
+        setupStyles() {
+            // Only inject styles once
+            if (document.getElementById('progressive-image-styles')) {
+                return;
+            }
+
+            const styles = document.createElement('style');
+            styles.id = 'progressive-image-styles';
+            styles.textContent = `
+                img.lazy-loading {
+                    opacity: 0.7;
+                    transition: opacity 0.3s ease-in-out;
+                }
+
+                img.lazy-loaded {
+                    opacity: 1;
+                }
+
+                img.image-loaded {
+                    animation: fadeIn 0.3s ease-in-out;
+                }
+
+                img.image-error {
+                    opacity: 0.5;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+                /* Placeholder image styles */
+                .image-placeholder {
+                    background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+                    background-size: 200% 100%;
+                    animation: shimmer 2s infinite;
+                }
+
+                @keyframes shimmer {
+                    0% { background-position: 200% 0; }
+                    100% { background-position: -200% 0; }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+
+        loadImages() {
+            document.querySelectorAll(this.imageSelector).forEach(img => {
+                this.loadImage(img);
+            });
+        }
+
+        loadImage(img) {
+            img.classList.add('lazy-loading');
+
+            // Use native loading if available
+            if ('loading' in img) {
+                img.loading = 'lazy';
+            }
+
+            // Fallback to manual loading
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                        }
+                        if (img.dataset.srcset) {
+                            img.srcset = img.dataset.srcset;
+                        }
+
+                        img.addEventListener('load', () => {
+                            img.classList.remove('lazy-loading');
+                            img.classList.add('lazy-loaded');
+                        });
+
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            imageObserver.observe(img);
+        }
+    }
+
+    /**
+     * Image Optimization Helper
+     * Provides utilities for responsive image sizing
+     */
+    class ImageOptimizationHelper {
+        /**
+         * Generate srcset string for responsive images
+         */
+        static generateSrcSet(baseUrl, sizes = [400, 600, 900, 1200]) {
+            return sizes
+                .map(size => `${baseUrl}?w=${size} ${size}w`)
+                .join(', ');
+        }
+
+        /**
+         * Get appropriate image size for viewport
+         */
+        static getOptimalImageSize() {
+            const width = window.innerWidth;
+
+            if (width < 576) return 400;
+            if (width < 768) return 600;
+            if (width < 1024) return 900;
+            return 1200;
+        }
+
+        /**
+         * Preload critical images
+         */
+        static preloadCriticalImages(selectors = []) {
+            selectors.forEach(selector => {
+                document.querySelectorAll(selector).forEach(img => {
+                    if (img.dataset.src) {
+                        const link = document.createElement('link');
+                        link.rel = 'preload';
+                        link.as = 'image';
+                        link.href = img.dataset.src;
+
+                        if (img.dataset.srcset) {
+                            link.imagesrcset = img.dataset.srcset;
+                        }
+
+                        document.head.appendChild(link);
+                    }
+                });
+            });
+        }
+
+        /**
+         * Enable WebP with fallback
+         */
+        static enableWebPWithFallback() {
+            const webpImages = document.querySelectorAll('[data-webp]');
+
+            webpImages.forEach(img => {
+                const webpSrc = img.dataset.webp;
+                const fallbackSrc = img.dataset.src;
+
+                // Check WebP support
+                if (this.supportsWebP()) {
+                    img.dataset.src = webpSrc;
+                } else if (fallbackSrc) {
+                    img.dataset.src = fallbackSrc;
+                }
+            });
+        }
+
+        /**
+         * Check if browser supports WebP
+         */
+        static supportsWebP() {
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 1;
+            return canvas.toDataURL('image/webp').includes('webp');
+        }
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize lazy loading
+        window.lazyLoadManager = new LazyLoadManager({
+            rootMargin: '50px',
+            threshold: 0.01
+        });
+
+        // Enable WebP with fallback
+        ImageOptimizationHelper.enableWebPWithFallback();
+
+        // Preload critical images (hero, featured articles)
+        ImageOptimizationHelper.preloadCriticalImages([
+            '.featured-image img',
+            '.hero-image img'
+        ]);
+    });
+
+    // Expose for manual control
+    window.LazyLoadManager = LazyLoadManager;
+    window.ProgressiveImageLoader = ProgressiveImageLoader;
+    window.ImageOptimizationHelper = ImageOptimizationHelper;
+</script>
+
+<style>
+    /* Lazy loading and image optimization styles */
+
+    img[loading="lazy"] {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+    }
+
+    img[loading="lazy"].lazy-loaded {
+        animation: none;
+        background: none;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    /* Fade in animation for loaded images */
+    img.image-loaded {
+        animation: fadeInImage 0.4s ease-in-out;
+    }
+
+    @keyframes fadeInImage {
+        from {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Error state styling */
+    img.image-error {
+        opacity: 0.5;
+        border: 2px dashed #e5e7eb;
+    }
+
+    /* Responsive image container */
+    .image-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 66.67%; /* 3:2 aspect ratio */
+    }
+
+    .image-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>

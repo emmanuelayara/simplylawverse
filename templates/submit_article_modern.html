@@ -1,0 +1,665 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<style>
+    /* Modern Submit Article Page */
+    .submit-wrapper {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1.25rem;
+    }
+
+    .submit-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 0.6s ease-out;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .submit-header-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .submit-title {
+        color: #1e3a8a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .submit-subtitle {
+        color: #6b7280;
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* Form Card */
+    .submit-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out 0.1s both;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .submit-card-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .submit-card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    .card-header-title {
+        color: white;
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-header-text {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
+        margin: 0.75rem 0 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-body {
+        padding: 2.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-label i {
+        color: #3b82f6;
+    }
+
+    .required-indicator {
+        color: #ef4444;
+        font-weight: 700;
+    }
+
+    .form-control,
+    .form-select,
+    textarea {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+        font-family: inherit;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        background: white;
+    }
+
+    textarea {
+        min-height: 200px;
+        resize: vertical;
+    }
+
+    /* File Upload */
+    .file-upload-wrapper {
+        position: relative;
+    }
+
+    .file-upload-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 160px;
+        padding: 2rem;
+        border: 2px dashed #3b82f6;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f0f9ff;
+    }
+
+    .file-upload-label:hover {
+        border-color: #1e3a8a;
+        background: #e0f2fe;
+    }
+
+    .file-upload-content {
+        text-align: center;
+    }
+
+    .file-upload-icon {
+        font-size: 2.5rem;
+        color: #3b82f6;
+        margin-bottom: 0.75rem;
+    }
+
+    .file-upload-text {
+        color: #1e3a8a;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .file-upload-hint {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin: 0;
+    }
+
+    .form-control[type="file"] {
+        display: none;
+    }
+
+    .file-name {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        color: #059669;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .file-name i {
+        font-size: 1.25rem;
+    }
+
+    /* Helper Text */
+    .form-helper {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .form-helper i {
+        color: #3b82f6;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+        flex-wrap: wrap;
+    }
+
+    .btn-submit {
+        flex: 1;
+        min-width: 150px;
+        padding: 1rem;
+        background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        min-width: 150px;
+        padding: 1rem;
+        background: transparent;
+        color: #6b7280;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-cancel:hover {
+        border-color: #d1d5db;
+        color: #1f2937;
+    }
+
+    /* Character Count */
+    .char-count {
+        font-size: 0.85rem;
+        color: #6b7280;
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+
+    .char-count.warning {
+        color: #f59e0b;
+    }
+
+    .char-count.error {
+        color: #ef4444;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .submit-wrapper {
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .submit-title {
+            font-size: 2rem;
+        }
+
+        .submit-card-header {
+            padding: 1.5rem;
+        }
+
+        .form-body {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-submit,
+        .btn-cancel {
+            width: 100%;
+            min-width: auto;
+        }
+
+        .file-upload-label {
+            min-height: 140px;
+        }
+
+        .submit-header-icon {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .submit-title {
+            font-size: 1.75rem;
+        }
+
+        .submit-subtitle {
+            font-size: 1rem;
+        }
+
+        .card-header-title {
+            font-size: 1.5rem;
+        }
+
+        .form-label {
+            font-size: 0.95rem;
+        }
+
+        .form-body {
+            padding: 1.25rem;
+        }
+
+        .submit-card-header {
+            padding: 1.25rem;
+        }
+    }
+
+    /* Validation Feedback */
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+    }
+
+    .form-control.is-invalid,
+    .form-select.is-invalid {
+        border-color: #ef4444;
+    }
+
+    .form-control.is-invalid:focus,
+    .form-select.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+</style>
+
+<div class="submit-wrapper">
+    <!-- Header -->
+    <div class="submit-header">
+        <div class="submit-header-icon">
+            <i class="fas fa-pencil-alt"></i>
+        </div>
+        <h1 class="submit-title">Share Your Legal Insight</h1>
+        <p class="submit-subtitle">
+            Contribute to our community by submitting your article. Your content will be reviewed before publication.
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="submit-card">
+        <!-- Card Header -->
+        <div class="submit-card-header">
+            <h2 class="card-header-title">
+                <i class="fas fa-edit me-2"></i>Article Submission Form
+            </h2>
+            <p class="card-header-text">
+                Fill out all required fields <span class="required-indicator">*</span> to submit your article
+            </p>
+        </div>
+
+        <!-- Form Body -->
+        <div class="form-body">
+            <form method="POST" enctype="multipart/form-data" id="submitForm">
+                {{ form.hidden_tag() }}
+
+                <!-- Title Field -->
+                <div class="form-group">
+                    <label class="form-label" for="title">
+                        <i class="fas fa-heading"></i>
+                        {{ form.title.label.text }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {% if form.title.errors %}
+                        {{ form.title(class="form-control is-invalid", placeholder="Enter an engaging title") }}
+                        {% for error in form.title.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.title(class="form-control", placeholder="Enter an engaging title") }}
+                    {% endif %}
+                    <p class="form-helper">
+                        <i class="fas fa-info-circle"></i>
+                        Use a clear, descriptive title that captures the essence of your article
+                    </p>
+                </div>
+
+                <!-- Author Field -->
+                <div class="form-group">
+                    <label class="form-label" for="author">
+                        <i class="fas fa-user"></i>
+                        {{ form.author.label.text }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {% if form.author.errors %}
+                        {{ form.author(class="form-control is-invalid", placeholder="Your name") }}
+                        {% for error in form.author.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.author(class="form-control", placeholder="Your name") }}
+                    {% endif %}
+                    <p class="form-helper">
+                        <i class="fas fa-info-circle"></i>
+                        How you'd like to be credited
+                    </p>
+                </div>
+
+                <!-- Category Field -->
+                <div class="form-group">
+                    <label class="form-label" for="category">
+                        <i class="fas fa-tag"></i>
+                        {{ form.category.label.text }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {% if form.category.errors %}
+                        {{ form.category(class="form-select is-invalid") }}
+                        {% for error in form.category.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.category(class="form-select") }}
+                    {% endif %}
+                    <p class="form-helper">
+                        <i class="fas fa-info-circle"></i>
+                        Select the category that best fits your article
+                    </p>
+                </div>
+
+                <!-- Content Field -->
+                <div class="form-group">
+                    <label class="form-label" for="content">
+                        <i class="fas fa-align-left"></i>
+                        {{ form.content.label.text }}
+                        <span class="required-indicator">*</span>
+                    </label>
+                    {% if form.content.errors %}
+                        {{ form.content(class="form-control is-invalid", placeholder="Write your article content here...") }}
+                        {% for error in form.content.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.content(class="form-control", placeholder="Write your article content here...") }}
+                    {% endif %}
+                    <p class="form-helper">
+                        <i class="fas fa-info-circle"></i>
+                        Minimum 100 characters. Write clear, informative content
+                    </p>
+                    <div class="char-count" id="charCount">0 characters</div>
+                </div>
+
+                <!-- Cover Image Field -->
+                <div class="form-group">
+                    <label class="form-label" for="cover_image">
+                        <i class="fas fa-image"></i>
+                        {{ form.cover_image.label.text }}
+                    </label>
+                    <label class="file-upload-label" for="coverImageInput">
+                        <div class="file-upload-content">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-upload-text">Click to upload an image</div>
+                            <p class="file-upload-hint">PNG, JPG up to 5MB</p>
+                        </div>
+                    </label>
+                    {{ form.cover_image(id="coverImageInput", type="file", accept="image/*") }}
+                    <div id="fileName" style="display: none;">
+                        <div class="file-name">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="selectedFileName"></span>
+                        </div>
+                    </div>
+                    <p class="form-helper">
+                        <i class="fas fa-info-circle"></i>
+                        Optional: Add a cover image to make your article more visually appealing
+                    </p>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Article
+                    </button>
+                    <a href="{{ url_for('public.home') }}" class="btn-cancel">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Character count for content
+    const contentField = document.getElementById('content');
+    const charCountElement = document.getElementById('charCount');
+
+    if (contentField) {
+        contentField.addEventListener('input', function() {
+            const count = this.value.length;
+            charCountElement.textContent = count + ' characters';
+            
+            if (count < 100) {
+                charCountElement.classList.add('warning');
+                charCountElement.classList.remove('error');
+            } else if (count < 50) {
+                charCountElement.classList.add('error');
+                charCountElement.classList.remove('warning');
+            } else {
+                charCountElement.classList.remove('warning', 'error');
+            }
+        });
+    }
+
+    // File upload preview
+    const fileInput = document.getElementById('coverImageInput');
+    const fileNameDiv = document.getElementById('fileName');
+    const selectedFileName = document.getElementById('selectedFileName');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                selectedFileName.textContent = file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+                fileNameDiv.style.display = 'block';
+            } else {
+                fileNameDiv.style.display = 'none';
+            }
+        });
+    }
+
+    // Form submission with validation
+    const submitForm = document.getElementById('submitForm');
+    if (submitForm) {
+        submitForm.addEventListener('submit', function(e) {
+            const titleField = document.getElementById('title');
+            const authorField = document.getElementById('author');
+            const categoryField = document.getElementById('category');
+            const contentField = document.getElementById('content');
+
+            let isValid = true;
+
+            // Simple validation
+            if (!titleField.value.trim()) {
+                titleField.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                titleField.classList.remove('is-invalid');
+            }
+
+            if (!authorField.value.trim()) {
+                authorField.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                authorField.classList.remove('is-invalid');
+            }
+
+            if (!categoryField.value) {
+                categoryField.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                categoryField.classList.remove('is-invalid');
+            }
+
+            if (contentField.value.length < 100) {
+                contentField.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                contentField.classList.remove('is-invalid');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    }
+</script>
+
+{% endblock %}

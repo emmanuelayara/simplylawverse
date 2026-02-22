@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Disclaimer - Simply Lawverse{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-law-dark text-white py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold mb-4">Legal Disclaimer</h1>
+        <p class="text-gray-300">Last updated: February 2026</p>
+    </div>
+</section>
+
+<!-- Content -->
+<section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-lg">
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="font-bold text-red-700">
+                ⚠️ IMPORTANT: Website content and blog articles are for general informational purposes only and do not constitute legal advice.
+            </p>
+        </div>
+
+        <h2>1. No Attorney-Client Relationship</h2>
+        <p>
+            Accessing this website and its information does not create an attorney-client relationship.
+            A professional legal relationship is established only through direct engagement with our lawyer and execution of a formal retainer agreement.
+        </p>
+
+        <h2>2. Website Content Is Not Legal Advice</h2>
+        <p>
+            All articles, guides, and information on this website are provided for general educational purposes only.
+            They should not be relied upon for making specific legal decisions. Always consult with a qualified attorney about your specific situation.
+        </p>
+
+        <h2>3. General Informational Content</h2>
+        <p>
+            The blog articles discuss general legal concepts and are not tailored to your situation.
+            Laws change frequently, and interpretations vary. What applies in one situation may not apply to yours.
+        </p>
+
+        <h2>4. Consultation Required</h2>
+        <p>
+            Before taking any legal action based on information from this website, schedule a consultation to discuss your specific situation.
+            Every legal matter is unique and requires individualized analysis.
+        </p>
+
+        <h2>5. Past Performance</h2>
+        <p>
+            Previous results do not guarantee future outcomes. Each legal matter is different and results depend on specific facts and circumstances.
+        </p>
+
+        <h2>6. No Warranty</h2>
+        <p>
+            Website content is provided "as is" without warranty of any kind, express or implied.
+            We do not warrant the accuracy, completeness, or usefulness of any information on this website.
+        </p>
+
+        <h2>7. Limitation of Liability</h2>
+        <p>
+            Simply Lawverse, its owners, and employees are not liable for any damages arising from your use of this website or reliance on its content.
+        </p>
+
+        <h2>8. When You Need Legal Advice</h2>
+        <p>
+            If you need professional legal advice, please schedule a consultation. During a paid consultation:
+        </p>
+        <ul>
+            <li>You receive individualized legal analysis</li>
+            <li>Your information is protected by attorney-client privilege</li>
+            <li>The lawyer can provide specific recommendations for your situation</li>
+            <li>You have direct access to legal expertise</li>
+        </ul>
+
+        <h2>9. Contact for Consultation</h2>
+        <p>
+            <strong>Don't rely on website content alone.</strong> If you have a legal matter that requires professional advice, please book a consultation:
+        </p>
+        <p>
+            <a href="{{ url_for('bookings.index') }}" class="text-law-blue font-bold hover:underline">Schedule a Consultation</a>
+        </p>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Article Header -->
+    <div class="row mb-5">
+        <div class="col-lg-8 offset-lg-2">
+            <!-- Status Badge -->
+            <div class="mb-3">
+                {% if article.status == 'pending' %}
+                    <span class="badge bg-warning text-dark">
+                        <i class="fas fa-hourglass-half me-1"></i>Pending Review
+                    </span>
+                {% elif article.status == 'approved' %}
+                    <span class="badge bg-success">
+                        <i class="fas fa-check-circle me-1"></i>Approved
+                    </span>
+                {% elif article.status == 'disapproved' %}
+                    <span class="badge bg-danger">
+                        <i class="fas fa-times-circle me-1"></i>Disapproved
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- Article Title -->
+            <h1 class="display-4 fw-bold mb-3">{{ article.title }}</h1>
+
+            <!-- Article Meta Information -->
+            <div class="d-flex flex-wrap gap-3 mb-4 text-muted">
+                <div>
+                    <i class="fas fa-user me-2"></i>
+                    <strong>Author:</strong> {{ article.author }}
+                </div>
+                <div>
+                    <i class="fas fa-envelope me-2"></i>
+                    <strong>Email:</strong> {{ article.email }}
+                </div>
+                <div>
+                    <i class="fas fa-folder me-2"></i>
+                    <strong>Category:</strong> {{ article.category }}
+                </div>
+                <div>
+                    <i class="fas fa-calendar me-2"></i>
+                    <strong>Submitted:</strong> {{ article.date_posted.strftime('%B %d, %Y') }}
+                </div>
+                <div>
+                    <i class="fas fa-heart me-2"></i>
+                    <strong>Likes:</strong> {{ article.likes or 0 }}
+                </div>
+            </div>
+
+            <!-- Admin Action Buttons (for pending articles) -->
+            {% if article.status == 'pending' %}
+            <div class="mb-4 d-flex gap-2">
+                <form method="POST" action="{{ url_for('admin.approve_article', article_id=article.id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill px-4">
+                        <i class="fas fa-check-circle me-2"></i>Approve & Publish
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('admin.disapprove_article', article_id=article.id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-lg rounded-pill px-4" onclick="return confirm('Are you sure you want to disapprove this article?');">
+                        <i class="fas fa-times-circle me-2"></i>Disapprove
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
+            <!-- Divider -->
+            <hr class="my-5">
+
+            <!-- Article Content -->
+            <div class="article-content">
+                {{ article.content | safe }}
+            </div>
+
+            <!-- Divider -->
+            <hr class="my-5">
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h3 class="mb-4">
+                    <i class="fas fa-comments me-2"></i>Comments ({{ paginated_comments.total }})
+                </h3>
+
+                {% if paginated_comments.items %}
+                    <div class="comments-list">
+                        {% for comment in paginated_comments.items %}
+                        <div class="card mb-3 border-light">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <strong>{{ comment.name }}</strong>
+                                    <small class="text-muted d-block">{{ comment.date_posted.strftime('%B %d, %Y at %I:%M %p') }}</small>
+                                </h6>
+                                <p class="card-text">{{ comment.content }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination for Comments -->
+                    {% if paginated_comments.pages > 1 %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if paginated_comments.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.admin_view_article', article_id=article.id, page=paginated_comments.prev_num) }}">Previous</a>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in paginated_comments.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num == paginated_comments.page %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('admin.admin_view_article', article_id=article.id, page=page_num) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if paginated_comments.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.admin_view_article', article_id=article.id, page=paginated_comments.next_num) }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>No comments yet on this article.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .article-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+    }
+
+    .article-content p {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+
+    .article-content h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+    }
+
+    .comments-section {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}

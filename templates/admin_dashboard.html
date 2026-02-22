@@ -103,7 +103,7 @@
                         <div class="row align-items-center">
                           <div class="col-12 col-md-8 mb-3 mb-md-0">
                             <h5 class="fw-bold text-dark mb-2">
-                              <a href="{{ url_for('view_article', article_id=article.id) }}" 
+                              <a href="{{ url_for('public.view_article', article_id=article.id) }}" 
                                  class="text-decoration-none text-primary">
                                 {{ article.title }}
                               </a>
@@ -115,20 +115,20 @@
                             <p class="text-dark mb-3" style="line-height: 1.6;">
                               {{ article.content[:200] }}{% if article.content|length > 200 %}...{% endif %}
                             </p>
-                            <a href="{{ url_for('view_article', article_id=article.id) }}" 
+                            <a href="{{ url_for('admin.admin_view_article', article_id=article.id) }}" 
                                class="btn btn-sm btn-outline-primary rounded-pill px-3">
                               <i class="fas fa-eye me-1"></i>
-                              Read Full Article
+                              Review Article
                             </a>
                           </div>
                           <div class="col-12 col-md-4 text-md-end">
                             <div class="d-flex flex-column flex-md-column gap-2">
-                              <a href="{{ url_for('approve_article', article_id=article.id) }}" 
+                              <a href="{{ url_for('admin.approve_article', article_id=article.id) }}" 
                                  class="btn btn-success rounded-pill px-4 action-btn">
                                 <i class="fas fa-check me-1"></i>
                                 Approve
                               </a>
-                              <a href="{{ url_for('disapprove_article', article_id=article.id) }}" 
+                              <a href="{{ url_for('admin.disapprove_article', article_id=article.id) }}" 
                                  class="btn btn-danger rounded-pill px-4 action-btn">
                                 <i class="fas fa-times me-1"></i>
                                 Disapprove
@@ -148,7 +148,7 @@
                   {% if articles.has_prev %}
                     <li class="page-item">
                       <a class="page-link rounded-pill me-1" 
-                         href="{{ url_for('admin_dashboard', pending_page=articles.prev_num, approved_page=approved_articles.page) }}">
+                         href="{{ url_for('admin.admin_dashboard', pending_page=articles.prev_num, approved_page=approved_articles.page) }}">
                         <i class="fas fa-chevron-left"></i>
                       </a>
                     </li>
@@ -156,7 +156,7 @@
                   {% for page_num in range(1, articles.pages + 1) %}
                     <li class="page-item {% if articles.page == page_num %}active{% endif %}">
                       <a class="page-link rounded-pill mx-1" 
-                         href="{{ url_for('admin_dashboard', pending_page=page_num, approved_page=approved_articles.page) }}">
+                         href="{{ url_for('admin.admin_dashboard', pending_page=page_num, approved_page=approved_articles.page) }}">
                         {{ page_num }}
                       </a>
                     </li>
@@ -164,7 +164,7 @@
                   {% if articles.has_next %}
                     <li class="page-item">
                       <a class="page-link rounded-pill ms-1" 
-                         href="{{ url_for('admin_dashboard', pending_page=articles.next_num, approved_page=approved_articles.page) }}">
+                         href="{{ url_for('admin.admin_dashboard', pending_page=articles.next_num, approved_page=approved_articles.page) }}">
                         <i class="fas fa-chevron-right"></i>
                       </a>
                     </li>
@@ -283,12 +283,12 @@
                         </p>
                         
                         <div class="d-flex flex-column gap-2">
-                          <a href="{{ url_for('view_article', article_id=article.id) }}" 
+                          <a href="{{ url_for('admin.admin_view_article', article_id=article.id) }}" 
                              class="btn btn-sm btn-outline-primary rounded-pill">
                             <i class="fas fa-eye me-1"></i>
-                            Read Article
+                            Review Article
                           </a>
-                          <a href="{{ url_for('disapprove_article', article_id=article.id) }}" 
+                          <a href="{{ url_for('admin.disapprove_article', article_id=article.id) }}" 
                              class="btn btn-sm btn-outline-danger rounded-pill delete-btn">
                             <i class="fas fa-trash me-1"></i>
                             Delete
@@ -306,7 +306,7 @@
                   {% if approved_articles.has_prev %}
                     <li class="page-item">
                       <a class="page-link rounded-pill me-1" 
-                         href="{{ url_for('admin_dashboard', approved_page=approved_articles.prev_num, pending_page=articles.page) }}">
+                         href="{{ url_for('admin.admin_dashboard', approved_page=approved_articles.prev_num, pending_page=articles.page) }}">
                         <i class="fas fa-chevron-left"></i>
                       </a>
                     </li>
@@ -314,7 +314,7 @@
                   {% for page_num in range(1, approved_articles.pages + 1) %}
                     <li class="page-item {% if approved_articles.page == page_num %}active{% endif %}">
                       <a class="page-link rounded-pill mx-1" 
-                         href="{{ url_for('admin_dashboard', approved_page=page_num, pending_page=articles.page) }}">
+                         href="{{ url_for('admin.admin_dashboard', approved_page=page_num, pending_page=articles.page) }}">
                         {{ page_num }}
                       </a>
                     </li>
@@ -322,7 +322,7 @@
                   {% if approved_articles.has_next %}
                     <li class="page-item">
                       <a class="page-link rounded-pill ms-1" 
-                         href="{{ url_for('admin_dashboard', approved_page=approved_articles.next_num, pending_page=articles.page) }}">
+                         href="{{ url_for('admin.admin_dashboard', approved_page=approved_articles.next_num, pending_page=articles.page) }}">
                         <i class="fas fa-chevron-right"></i>
                       </a>
                     </li>

@@ -409,7 +409,10 @@
                 <span>or</span>
             </div>
             <p class="register-link">
-                Don't have an account? <a href="{{ url_for('register_admin') }}">Create Account</a>
+                Don't have an account? <a href="{{ url_for('auth.register_admin') }}">Create Account</a>
+            </p>
+            <p class="register-link" style="margin-top: 0.5rem;">
+                Forgot password? <a href="{{ url_for('auth.forgot_password') }}">Reset it here</a>
             </p>
         </div>
     </div>

@@ -1,0 +1,401 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<style>
+    /* Profile Container */
+    .profile-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 15px;
+    }
+
+    /* Profile Header */
+    .profile-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(30, 58, 138, 0.2);
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin: 0 auto 1.5rem;
+        border: 4px solid white;
+    }
+
+    .profile-username {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-email {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin-bottom: 1rem;
+    }
+
+    .profile-meta {
+        font-size: 0.9rem;
+        opacity: 0.85;
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .card-title {
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-bottom: 2px solid #dbeafe;
+        padding-bottom: 1rem;
+    }
+
+    .card-title i {
+        color: #3b82f6;
+        font-size: 1.5rem;
+    }
+
+    /* Info Item */
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #6b7280;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-password {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-password:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-back {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(107, 114, 128, 0.3);
+    }
+
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Stats Section */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border: 2px solid #bfdbfe;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1e3a8a;
+    }
+
+    .stat-label {
+        color: #1e40af;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-container {
+            margin: 1rem auto;
+        }
+
+        .profile-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .profile-username {
+            font-size: 1.5rem;
+        }
+
+        .profile-meta {
+            gap: 1rem;
+        }
+
+        .profile-card {
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .action-buttons {
+            margin-top: 1.5rem;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .profile-header {
+            padding: 1.5rem 1rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+        }
+
+        .profile-username {
+            font-size: 1.25rem;
+        }
+
+        .profile-email {
+            font-size: 0.95rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+
+    /* Loading Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-header {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .profile-card {
+        animation: fadeIn 0.6s ease-out;
+    }
+</style>
+
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <h1 class="profile-username">{{ current_user.username }}</h1>
+        <p class="profile-email">{{ current_user.email }}</p>
+        <div class="profile-meta">
+            <div class="meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Joined {{ current_user.created_at.strftime('%B %Y') if current_user.created_at else 'N/A' }}</span>
+            </div>
+            {% if current_user.is_admin %}
+            <div class="meta-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>Administrator</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Profile Info Card -->
+    <div class="profile-card">
+        <h2 class="card-title">
+            <i class="fas fa-user-info"></i>
+            Profile Information
+        </h2>
+        <div class="info-item">
+            <span class="info-label">
+                <i class="fas fa-user"></i>
+                Username
+            </span>
+            <span class="info-value">{{ current_user.username }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">
+                <i class="fas fa-envelope"></i>
+                Email Address
+            </span>
+            <span class="info-value">{{ current_user.email }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">
+                <i class="fas fa-lock"></i>
+                Password
+            </span>
+            <span class="info-value">••••••••</span>
+        </div>
+        {% if current_user.is_admin %}
+        <div class="info-item">
+            <span class="info-label">
+                <i class="fas fa-crown"></i>
+                Account Type
+            </span>
+            <span class="info-value">
+                <span class="badge bg-warning">Admin</span>
+            </span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Stats Card -->
+    <div class="profile-card">
+        <h2 class="card-title">
+            <i class="fas fa-chart-bar"></i>
+            Account Statistics
+        </h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ user_articles_count }}</div>
+                <div class="stat-label">Articles Posted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ user_comments_count }}</div>
+                <div class="stat-label">Comments</div>
+            </div>
+            {% if current_user.is_admin %}
+            <div class="stat-card">
+                <div class="stat-value">{{ pending_articles_count }}</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{{ url_for('auth.edit_profile') }}" class="btn-action btn-edit">
+            <i class="fas fa-edit"></i>
+            Edit Profile
+        </a>
+        <a href="{{ url_for('auth.change_password') }}" class="btn-action btn-password">
+            <i class="fas fa-key"></i>
+            Change Password
+        </a>
+        <a href="{{ url_for('public.home') }}" class="btn-action btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Back Home
+        </a>
+    </div>
+</div>
+
+{% endblock %}

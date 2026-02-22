@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Article Draft{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>✏️ Create Article Draft</h1>
+            <p class="text-muted">Save your article as a draft and publish it later.</p>
+
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                <div class="form-group mb-3">
+                    {{ form.title.label(class="form-label") }}
+                    {% if form.title.errors %}
+                        {{ form.title(class="form-control is-invalid") }}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.title(class="form-control", placeholder="Enter article title") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    {{ form.category.label(class="form-label") }}
+                    {% if form.category.errors %}
+                        {{ form.category(class="form-control is-invalid") }}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.category.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.category(class="form-control") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    {{ form.content.label(class="form-label") }}
+                    {% if form.content.errors %}
+                        {{ form.content(class="form-control is-invalid", rows="10") }}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.content.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.content(class="form-control", rows="10", placeholder="Write your article content here") }}
+                    {% endif %}
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">💾 Save as Draft</button>
+                    <a href="{{ url_for('articles.view_my_drafts') }}" class="btn btn-secondary">📋 View My Drafts</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

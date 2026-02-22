@@ -1,0 +1,60 @@
+<!-- Footer Component -->
+<footer class="bg-law-dark text-white py-12 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <!-- About Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+                    <svg width="24" height="24" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" class="text-law-gold">
+                        <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+                        <line x1="32" y1="12" x2="32" y2="52" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="20" y1="20" x2="32" y2="44" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+                        <line x1="44" y1="20" x2="32" y2="44" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+                    </svg>
+                    <span>Simply Lawverse</span>
+                </h3>
+                <p class="text-gray-400 text-sm">Professional corporate legal services for Nigerian businesses and entrepreneurs.</p>
+            </div>
+            
+            <!-- Services Links -->
+            <div>
+                <h4 class="font-semibold mb-4">Services</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="{{ url_for('services.index') }}" class="hover:text-white transition">All Services</a></li>
+                    <li><a href="{{ url_for('services.service_detail', slug='company-registration') }}" class="hover:text-white transition">Company Registration</a></li>
+                    <li><a href="{{ url_for('services.service_detail', slug='contract-drafting') }}" class="hover:text-white transition">Contract Drafting</a></li>
+                    <li><a href="{{ url_for('services.service_detail', slug='compliance') }}" class="hover:text-white transition">Compliance Advisory</a></li>
+                </ul>
+            </div>
+            
+            <!-- Resources -->
+            <div>
+                <h4 class="font-semibold mb-4">Resources</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="{{ url_for('public.blog') }}" class="hover:text-white transition">Legal Blog</a></li>
+                    <li><a href="{{ url_for('public.about') }}" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="{{ url_for('contact.contact') }}" class="hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+            
+            <!-- Legal -->
+            <div>
+                <h4 class="font-semibold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="{{ url_for('public.legal_page', page_type='privacy-policy') }}" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="{{ url_for('public.legal_page', page_type='terms') }}" class="hover:text-white transition">Terms of Service</a></li>
+                    <li><a href="{{ url_for('public.legal_page', page_type='disclaimer') }}" class="hover:text-white transition">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Divider -->
+        <hr class="border-gray-700 my-8">
+        
+        <!-- Bottom -->
+        <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+            <p>&copy; {{ now.now().year }} Simply Lawverse. All rights reserved.</p>
+            <p>Lagos, Nigeria | +234 (0) XXX-XXX-XXXX | info@simplylawverse.com</p>
+        </div>
+    </div>
+</footer>

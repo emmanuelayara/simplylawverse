@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ page_description or 'Professional corporate legal services in Nigeria' }}">
+    <meta name="keywords" content="corporate law, Nigeria, legal services, consultations">
+    
+    <!-- SEO Meta Tags -->
+    <title>{% block title %}{{ page_title or 'Simply Lawverse - Corporate Legal Services' }}{% endblock %}</title>
+    {% block seo_meta %}{% endblock %}
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'law-dark': '#1a1a1a',
+                        'law-blue': '#003d7a',
+                        'law-gold': '#b8860b',
+                        'law-gray': '#f5f5f5',
+                    },
+                    fontFamily: {
+                        'serif': ['Georgia', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #fafaf8;
+            color: #1a1a1a;
+        }
+        
+        .law-serif {
+            font-family: 'Georgia', serif;
+        }
+        
+        a {
+            transition: color 0.3s ease;
+        }
+        
+        button, .btn {
+            transition: all 0.2s ease;
+        }
+        
+        .page-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-content {
+            flex: 1;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="page-container">
+    <!-- Header/Navigation -->
+    {% include 'components/header.html' %}
+    
+    <!-- Main Content -->
+    <main class="page-content">
+        {% if get_flashed_messages() %}
+        <div class="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="alert {% if category == 'error' %}bg-red-50 border-l-4 border-red-500 text-red-700{% elif category == 'warning' %}bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700{% elif category == 'info' %}bg-blue-50 border-l-4 border-blue-500 text-blue-700{% else %}bg-green-50 border-l-4 border-green-500 text-green-700{% endif %} p-4 rounded" role="alert">
+                <p>{{ message }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    {% include 'components/footer.html' %}
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

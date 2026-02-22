@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Booking Header -->
+<section class="bg-law-dark text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold mb-4">Book a Legal Consultation</h1>
+        <p class="text-xl text-gray-300">Tell us about your legal needs and schedule your consultation</p>
+    </div>
+</section>
+
+<!-- Booking Form -->
+<section class="py-12 bg-white">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Progress Indicator -->
+        <div class="mb-8 flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-law-blue text-white rounded-full flex items-center justify-center font-bold">1</div>
+                <span class="text-law-dark font-semibold ml-3">Client Information</span>
+            </div>
+            <div class="flex-grow border-t-2 border-gray-300 mx-4"></div>
+            <div class="flex items-center text-gray-400">
+                <div class="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                <span class="ml-3">Select Consultation</span>
+            </div>
+            <div class="flex-grow border-t-2 border-gray-300 mx-4"></div>
+            <div class="flex items-center text-gray-400">
+                <div class="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                <span class="ml-3">Payment</span>
+            </div>
+        </div>
+        
+        <!-- Form -->
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {{ form.hidden_tag() }}
+            
+            <!-- Personal Information -->
+            <div>
+                <h3 class="text-xl font-bold text-law-dark mb-4">Your Information</h3>
+                
+                <!-- Full Name -->
+                <div class="mb-4">
+                    {{ form.full_name.label(class="block text-law-dark font-semibold mb-1") }}
+                    {% if form.full_name.errors %}
+                        {{ form.full_name(class="w-full px-4 py-2 border-2 border-red-500 rounded") }}
+                        <ul class="text-red-600 text-sm mt-1">
+                        {% for error in form.full_name.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        {{ form.full_name(class="w-full px-4 py-2 border border-gray-300 rounded focus:border-law-blue focus:outline-none") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Email -->
+                <div class="mb-4">
+                    {{ form.email.label(class="block text-law-dark font-semibold mb-1") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="w-full px-4 py-2 border-2 border-red-500 rounded") }}
+                        <ul class="text-red-600 text-sm mt-1">
+                        {% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        {{ form.email(class="w-full px-4 py-2 border border-gray-300 rounded focus:border-law-blue focus:outline-none") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Phone -->
+                <div class="mb-4">
+                    {{ form.phone.label(class="block text-law-dark font-semibold mb-1") }}
+                    {% if form.phone.errors %}
+                        {{ form.phone(class="w-full px-4 py-2 border-2 border-red-500 rounded", placeholder="+234 (0) XXX-XXX-XXXX") }}
+                        <ul class="text-red-600 text-sm mt-1">
+                        {% for error in form.phone.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        {{ form.phone(class="w-full px-4 py-2 border border-gray-300 rounded focus:border-law-blue focus:outline-none", placeholder="+234 (0) XXX-XXX-XXXX") }}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Company Information -->
+            <div>
+                <h3 class="text-xl font-bold text-law-dark mb-4 mt-8">Business Information</h3>
+                
+                <!-- Company Name -->
+                <div class="mb-4">
+                    {{ form.company_name.label(class="block text-law-dark font-semibold mb-1") }}
+                    {% if form.company_name.errors %}
+                        {{ form.company_name(class="w-full px-4 py-2 border-2 border-red-500 rounded") }}
+                        <ul class="text-red-600 text-sm mt-1">
+                        {% for error in form.company_name.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        {{ form.company_name(class="w-full px-4 py-2 border border-gray-300 rounded focus:border-law-blue focus:outline-none") }}
+                    {% endif %}
+                </div>
+                
+                <!-- CAC Status -->
+                <div class="mb-4">
+                    {{ form.cac_status.label(class="block text-law-dark font-semibold mb-1") }}
+                    {% if form.cac_status.errors %}
+                        {{ form.cac_status(class="w-full px-4 py-2 border-2 border-red-500 rounded") }}
+                        <ul class="text-red-600 text-sm mt-1">
+                        {% for error in form.cac_status.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        {{ form.cac_status(class="w-full px-4 py-2 border border-gray-300 rounded focus:border-law-blue focus:outline-none") }}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Legal Issue -->
+            <div>
+                <h3 class="text-xl font-bold text-law-dark mb-4 mt-8">Legal Issue Details</h3>
+                
+                <!-- Issue Description -->
+                <div class="mb-4">
+                    {{ form.issue_description.label(class="block text-law-dark font-semibold mb-1") }}
+                    {% if form.issue_description.errors %}
+                        {{ form.issue_description(class="w-full px-4 py-2 border-2 border-red-500 rounded") }}
+                        <ul class="text-red-600 text-sm mt-1">
+                        {% for error in form.issue_description.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        {{ form.issue_description(class="w-full px-4 py-2 border border-gray-300 rounded focus:border-law-blue focus:outline-none") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Document Upload -->
+                <div class="mb-4">
+                    {{ form.document_upload.label(class="block text-law-dark font-semibold mb-1") }}
+                    <p class="text-gray-600 text-sm mb-2">Optional: Upload relevant documents (PDF, DOC, DOCX - Max 5MB)</p>
+                    {{ form.document_upload(class="w-full px-4 py-2 border border-gray-300 rounded") }}
+                </div>
+            </div>
+            
+            <!-- Submit -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                {{ form.submit(class="w-full px-8 py-3 bg-law-blue text-white font-bold rounded hover:bg-opacity-90 transition") }}
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Info Section -->
+<section class="py-12 bg-law-gray">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-law-dark mb-8">What Happens Next?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="w-12 h-12 bg-law-blue text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">1</div>
+                <h3 class="font-bold text-law-dark mb-2">Submit Form</h3>
+                <p class="text-gray-600 text-sm">Fill out your details and tell us about your legal needs</p>
+            </div>
+            <div>
+                <div class="w-12 h-12 bg-law-blue text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">2</div>
+                <h3 class="font-bold text-law-dark mb-2">Select Time Slot</h3>
+                <p class="text-gray-600 text-sm">Choose your preferred consultation type and available date</p>
+            </div>
+            <div>
+                <div class="w-12 h-12 bg-law-blue text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">3</div>
+                <h3 class="font-bold text-law-dark mb-2">Pay & Confirm</h3>
+                <p class="text-gray-600 text-sm">Complete payment via Paystack and receive confirmation</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
