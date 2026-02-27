@@ -24,7 +24,7 @@
                     },
                     fontFamily: {
                         'serif': ['Georgia', 'serif'],
-                        'sans': ['Inter', 'sans-serif'],
+                        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
                     }
                 }
             }
@@ -33,10 +33,21 @@
     
     <!-- Custom Styles -->
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: #fafaf8;
             color: #1a1a1a;
+            line-height: 1.6;
         }
         
         .law-serif {
@@ -59,6 +70,73 @@
         
         .page-content {
             flex: 1;
+        }
+        
+        /* Ensure Tailwind colors work */
+        .bg-law-dark {
+            background-color: #1a1a1a;
+        }
+        
+        .bg-law-blue {
+            background-color: #003d7a;
+        }
+        
+        .bg-law-gold {
+            background-color: #b8860b;
+        }
+        
+        .bg-law-gray {
+            background-color: #f5f5f5;
+        }
+        
+        .text-law-dark {
+            color: #1a1a1a;
+        }
+        
+        .text-law-blue {
+            color: #003d7a;
+        }
+        
+        .text-law-gold {
+            color: #b8860b;
+        }
+        
+        /* Professional styling */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        section {
+            padding: 3rem 0;
+        }
+        
+        .alert {
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Smooth transitions */
+        button, a[class*="btn"], input, select, textarea {
+            transition: all 0.2s ease;
+        }
+        
+        button:hover, a[class*="btn"]:hover {
+            transform: translateY(-2px);
         }
     </style>
     
@@ -85,6 +163,14 @@
     
     <!-- Footer -->
     {% include 'components/footer.html' %}
+    
+    <!-- Mobile Menu Script -->
+    <script>
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>

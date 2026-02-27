@@ -16,6 +16,6 @@ psycopg2-binary==2.9.10
 Pillow==11.1.0
 bleach==6.1.0
 requests==2.31.0
-paystack-python==0.2.0
+paystack==1.5.0
 python-slugify==8.0.1
 markdown==3.5.2

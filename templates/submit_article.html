@@ -362,6 +362,9 @@
         </div>
 
         <div class="form-body">
+            <!-- Upload Feedback Component -->
+            {% include 'components/upload_feedback.html' %}
+
             <form method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
 

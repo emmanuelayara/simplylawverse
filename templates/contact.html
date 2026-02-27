@@ -35,6 +35,9 @@
 
               <!-- Form Body -->
               <div class="card-body p-4 p-md-5">
+                <!-- Upload Feedback Component -->
+                {% include 'components/upload_feedback.html' %}
+
                 <form method="POST" id="contactForm">
                   {{ form.hidden_tag() }}
                   

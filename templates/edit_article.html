@@ -374,6 +374,9 @@
         <form method="POST" action="{{ url_for('articles.edit_article', article_id=article.id) }}" enctype="multipart/form-data" novalidate>
             {{ form.hidden_tag() }}
 
+            <!-- Upload Feedback Component -->
+            {% include 'components/upload_feedback.html' %}
+
             <!-- Article Details Section -->
             <div class="form-section">
                 <h2 class="section-title">

@@ -1,37 +1,30 @@
-{% extends 'layout.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<script>
-    document.body.classList.add('full-width-page');
-</script>
-
 <style>
 * {
     box-sizing: border-box;
 }
 
-/* CRITICAL: Override Bootstrap container */
-.container {
-    max-width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+body {
+    background-color: #fafbff;
 }
 
 /* Main content wrapper */
-.lawblog-wrapper {
+.blog-wrapper {
     background: #fafbff;
     min-height: 100vh;
 }
 
 /* Header with title and nav */
-.lawblog-header {
+.blog-header {
     background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
     padding: 3rem 0;
     border-bottom: 1px solid #e5e7eb;
     margin-bottom: 0;
 }
 
-.lawblog-title {
+.blog-title {
     font-size: 3rem;
     font-weight: 900;
     color: #1a1a1a;
@@ -40,7 +33,7 @@
     text-align: center;
 }
 
-.lawblog-subtitle {
+.blog-subtitle {
     font-size: 1.1rem;
     color: #666;
     text-align: center;
@@ -50,7 +43,7 @@
 }
 
 /* Navigation tabs */
-.lawblog-nav {
+.blog-nav {
     display: flex;
     gap: 2rem;
     justify-content: center;
@@ -58,7 +51,7 @@
     flex-wrap: wrap;
 }
 
-.lawblog-nav-item {
+.blog-nav-item {
     font-size: 0.95rem;
     font-weight: 600;
     color: #666;
@@ -68,14 +61,14 @@
     transition: all 0.3s ease;
 }
 
-.lawblog-nav-item:hover, 
-.lawblog-nav-item.active {
+.blog-nav-item:hover,
+.blog-nav-item.active {
     color: #1a1a1a;
     border-bottom-color: #3b82f6;
 }
 
 /* Main grid layout */
-.lawblog-container {
+.blog-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
@@ -219,6 +212,7 @@
     height: 200px;
     object-fit: cover;
     transition: transform 0.4s ease;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .article-card:hover .article-image {
@@ -281,7 +275,7 @@
 }
 
 /* Sidebar */
-.lawblog-sidebar {
+.blog-sidebar {
     position: sticky;
     top: 100px;
     height: fit-content;
@@ -372,6 +366,7 @@
     font-size: 0.95rem;
     font-family: inherit;
     cursor: pointer;
+    margin-bottom: 0.8rem;
 }
 
 .category-filter:focus {
@@ -459,73 +454,80 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .lawblog-container {
+    .blog-container {
         grid-template-columns: 1fr;
     }
-    
-    .lawblog-sidebar {
+
+    .blog-sidebar {
         position: relative;
         top: auto;
     }
-    
+
     .featured-article {
         grid-template-columns: 1fr;
     }
-    
+
     .articles-grid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .lawblog-container {
+    .blog-container {
         padding: 1rem;
     }
-    
-    .lawblog-header {
+
+    .blog-header {
         padding: 2rem 1rem;
     }
-    
-    .lawblog-title {
+
+    .blog-title {
         font-size: 2rem;
     }
-    
-    .lawblog-nav {
+
+    .blog-nav {
         gap: 1rem;
     }
-    
+
     .section-title {
         font-size: 1.5rem;
     }
-    
+
     .featured-article {
         padding: 1rem;
     }
-    
+
     .featured-image {
         height: 200px;
     }
-}
 
+    .article-card {
+        margin-bottom: 1rem;
+    }
+
+    .articles-grid {
+        gap: 1rem;
+    }
+}
 </style>
 
-<div class="lawblog-wrapper">
+<div class="blog-wrapper">
     <!-- Header -->
-    <div class="lawblog-header">
+    <div class="blog-header">
         <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
-            <h1 class="lawblog-title">SIMPLY LAWVERSE</h1>
-            <p class="lawblog-subtitle">Legal insights, articles & analysis</p>
-            <div class="lawblog-nav">
-                <div class="lawblog-nav-item active">Home</div>
-                <div class="lawblog-nav-item">Articles</div>
-                <div class="lawblog-nav-item">Resources</div>
-                <div class="lawblog-nav-item">Contact</div>
+            <h1 class="blog-title">LAWVERSE BLOG</h1>
+            <p class="blog-subtitle">Legal insights, analysis & professional articles</p>
+            <div class="blog-nav">
+                <a href="{{ url_for('public.home') }}" class="blog-nav-item">Home</a>
+                <div class="blog-nav-item active">Articles</div>
+                <a href="{{ url_for('articles.submit_article') }}" class="blog-nav-item">Submit Article</a>
+                <a href="{{ url_for('contact.contact') }}" class="blog-nav-item">Contact</a>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="lawblog-container">
+    <div class="blog-container">
         <!-- Main Column -->
         <div class="main-content">
             {% if articles.items %}
@@ -534,8 +536,8 @@
                 <div class="featured-section">
                     <div class="featured-article">
                         {% if featured.cover_image %}
-                            <img 
-                                src="{{ url_for('static', filename='uploads/' + featured.cover_image) }}" 
+                            <img
+                                src="{{ url_for('static', filename='uploads/' + featured.cover_image) }}"
                                 alt="Featured Article"
                                 class="featured-image"
                                 loading="lazy"
@@ -551,10 +553,10 @@
                             </div>
                             <div>
                                 <p class="featured-meta">
-                                    <strong>{{ featured.author }}</strong> on 
+                                    <strong>{{ featured.author }}</strong> on
                                     <strong>{{ featured.date_posted.strftime('%B %d, %Y') }}</strong>
                                 </p>
-                                <a href="{{ url_for('articles.read_more', article_id=featured.id) }}" 
+                                <a href="{{ url_for('articles.read_more', article_id=featured.id) }}"
                                    style="color: #3b82f6; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 1rem;">
                                     Read Article →
                                 </a>
@@ -567,14 +569,14 @@
                 <div class="articles-section">
                     <div class="section-label">Latest</div>
                     <h2 class="section-title">All Articles</h2>
-                    
+
                     {% if articles.items|length > 1 %}
                         <div class="articles-grid">
                             {% for article in articles.items[1:] %}
                                 <div class="article-card">
                                     {% if article.cover_image %}
-                                        <img 
-                                            src="{{ url_for('static', filename='uploads/' + article.cover_image) }}" 
+                                        <img
+                                            src="{{ url_for('static', filename='uploads/' + article.cover_image) }}"
                                             alt="{{ article.title }}"
                                             class="article-image"
                                             loading="lazy"
@@ -605,8 +607,8 @@
                     {% if articles.pages > 1 %}
                         <div class="pagination-wrap">
                             {% if articles.has_prev %}
-                                <a href="{{ url_for('public.home', page=1, category=selected_category, search=search_query) }}" class="page-link">«</a>
-                                <a href="{{ url_for('public.home', page=articles.prev_num, category=selected_category, search=search_query) }}" class="page-link">‹</a>
+                                <a href="{{ url_for('public.blog', page=1, category=category) }}" class="page-link">«</a>
+                                <a href="{{ url_for('public.blog', page=articles.prev_num, category=category) }}" class="page-link">‹</a>
                             {% else %}
                                 <span class="page-link disabled">«</span>
                                 <span class="page-link disabled">‹</span>
@@ -617,7 +619,7 @@
                                     {% if page_num == articles.page %}
                                         <span class="page-link active">{{ page_num }}</span>
                                     {% else %}
-                                        <a href="{{ url_for('public.home', page=page_num, category=selected_category, search=search_query) }}" class="page-link">{{ page_num }}</a>
+                                        <a href="{{ url_for('public.blog', page=page_num, category=category) }}" class="page-link">{{ page_num }}</a>
                                     {% endif %}
                                 {% else %}
                                     <span class="page-link">…</span>
@@ -625,8 +627,8 @@
                             {% endfor %}
 
                             {% if articles.has_next %}
-                                <a href="{{ url_for('public.home', page=articles.next_num, category=selected_category, search=search_query) }}" class="page-link">›</a>
-                                <a href="{{ url_for('public.home', page=articles.pages, category=selected_category, search=search_query) }}" class="page-link">»</a>
+                                <a href="{{ url_for('public.blog', page=articles.next_num, category=category) }}" class="page-link">›</a>
+                                <a href="{{ url_for('public.blog', page=articles.pages, category=category) }}" class="page-link">»</a>
                             {% else %}
                                 <span class="page-link disabled">›</span>
                                 <span class="page-link disabled">»</span>
@@ -643,21 +645,23 @@
         </div>
 
         <!-- Sidebar -->
-        <aside class="lawblog-sidebar">
+        <aside class="blog-sidebar">
             <!-- Search Section -->
             <div class="search-section">
-                <form method="get" action="{{ url_for('public.home') }}">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        class="search-input" 
+                <form method="get" action="{{ url_for('public.blog') }}" style="display: flex; flex-direction: column;">
+                    <label style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color: #1a1a1a;">Search</label>
+                    <input
+                        type="text"
+                        name="search"
+                        class="search-input"
                         placeholder="Search articles..."
-                        value="{{ search_query }}"
+                        style="margin-bottom: 0.8rem;"
                     >
+                    <label style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color: #1a1a1a;">Filter by Category</label>
                     <select name="category" class="category-filter">
                         <option value="">All Categories</option>
                         {% for cat in categories %}
-                            <option value="{{ cat[0] }}" {% if selected_category == cat[0] %}selected{% endif %}>
+                            <option value="{{ cat[0] }}" {% if category == cat[0] %}selected{% endif %}>
                                 {{ cat[0] }}
                             </option>
                         {% endfor %}
@@ -667,7 +671,7 @@
             </div>
 
             <!-- Latest Articles -->
-            {% set latest_articles = articles.items[:4] %}
+            {% set latest_articles = articles.items[:4] if articles.items else [] %}
             {% if latest_articles %}
                 <div class="sidebar-section">
                     <div class="sidebar-title">Latest</div>
@@ -688,7 +692,7 @@
                     <div class="sidebar-title">Categories</div>
                     {% for cat in categories %}
                         <div class="latest-item">
-                            <a href="{{ url_for('public.home', category=cat[0]) }}">
+                            <a href="{{ url_for('public.blog', category=cat[0]) }}">
                                 {{ cat[0] }}
                             </a>
                         </div>
@@ -706,9 +710,4 @@
         </aside>
     </div>
 </div>
-
-</style>
-
-
-
 {% endblock %}
