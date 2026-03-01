@@ -202,6 +202,10 @@ body {
     height: 100%;
 }
 
+.article-card {
+    cursor: pointer;
+}
+
 .article-card:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     transform: translateY(-4px);
@@ -474,39 +478,216 @@ body {
 
 @media (max-width: 768px) {
     .blog-container {
-        padding: 1rem;
+        padding: 0.75rem;
     }
 
     .blog-header {
-        padding: 2rem 1rem;
+        padding: 1.5rem 0.75rem;
     }
 
     .blog-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
+    }
+
+    .blog-subtitle {
+        font-size: 0.9rem;
     }
 
     .blog-nav {
-        gap: 1rem;
+        gap: 0.75rem;
+    }
+
+    .blog-nav-item {
+        font-size: 0.85rem;
+        padding: 0.4rem 0;
+    }
+
+    .section-label {
+        font-size: 0.75rem;
     }
 
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
+        margin-bottom: 1.25rem;
     }
 
     .featured-article {
-        padding: 1rem;
+        padding: 0.75rem;
+    }
+
+    .featured-title {
+        font-size: 1.4rem;
+    }
+
+    .featured-text {
+        font-size: 0.9rem;
+    }
+
+    .featured-meta {
+        font-size: 0.8rem;
     }
 
     .featured-image {
-        height: 200px;
+        height: 150px;
     }
 
     .article-card {
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .article-image {
+        height: 150px;
+    }
+
+    .article-body {
+        padding: 1rem;
+    }
+
+    .article-tag {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .article-title {
+        font-size: 1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .article-excerpt {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin-bottom: 0.75rem;
+    }
+
+    .article-footer {
+        font-size: 0.75rem;
+        padding-top: 0.75rem;
     }
 
     .articles-grid {
+        gap: 0.75rem;
+    }
+
+    .sidebar-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sidebar-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-container {
+        padding: 0.5rem;
+    }
+
+    .blog-header {
+        padding: 1rem 0.5rem;
+    }
+
+    .blog-title {
+        font-size: 1.5rem;
+    }
+
+    .blog-subtitle {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+    }
+
+    .blog-nav {
+        gap: 0.5rem;
+    }
+
+    .blog-nav-item {
+        font-size: 0.75rem;
+        padding: 0.3rem 0;
+    }
+
+    .section-label {
+        font-size: 0.65rem;
+    }
+
+    .section-title {
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+    }
+
+    .featured-article {
+        padding: 0.5rem;
         gap: 1rem;
+    }
+
+    .featured-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .featured-text {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .featured-tag {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .featured-meta {
+        font-size: 0.75rem;
+    }
+
+    .featured-image {
+        height: 120px;
+    }
+
+    .article-image {
+        height: 120px;
+    }
+
+    .article-body {
+        padding: 0.75rem;
+    }
+
+    .article-tag {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .article-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .article-excerpt {
+        font-size: 0.8rem;
+        line-height: 1.35;
+        margin-bottom: 0.6rem;
+    }
+
+    .article-footer {
+        font-size: 0.7rem;
+        padding-top: 0.6rem;
+    }
+
+    .articles-grid {
+        gap: 0.5rem;
+    }
+
+    .sidebar-section {
+        padding: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .sidebar-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+        padding-bottom: 0.6rem;
     }
 }
 </style>
@@ -573,7 +754,7 @@ body {
                     {% if articles.items|length > 1 %}
                         <div class="articles-grid">
                             {% for article in articles.items[1:] %}
-                                <div class="article-card">
+                                <div class="article-card" data-article-url="{{ url_for('articles.read_more', article_id=article.id) }}">
                                     {% if article.cover_image %}
                                         <img
                                             src="{{ url_for('static', filename='uploads/' + article.cover_image) }}"
@@ -710,4 +891,20 @@ body {
         </aside>
     </div>
 </div>
+
+<script>
+    // Make entire article card clickable
+    document.querySelectorAll('.article-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Don't navigate if clicking on the title link (which already handles navigation)
+            if (e.target.closest('a')) {
+                return;
+            }
+            const url = this.dataset.articleUrl;
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+</script>
 {% endblock %}

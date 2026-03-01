@@ -417,10 +417,10 @@ def edit_article(article_id):
     """Edit an approved or pending article"""
     article = Article.query.get_or_404(article_id)
     
-    # Check permissions - only author or admin can edit
-    if article.author != current_user.username and not current_user.is_admin:
+    # Only admins can edit articles during review process
+    if not current_user.is_admin:
         logger.warning(f"Unauthorized edit attempt on article {article_id} by {current_user.username}")
-        flash("You don't have permission to edit this article.", "danger")
+        flash("Only admins can edit articles during review.", "danger")
         return redirect(url_for('articles.read_more', article_id=article_id))
     
     # Prevent editing of approved/published articles

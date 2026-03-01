@@ -75,6 +75,83 @@
     .fade-in {
         animation: fadeIn 0.5s ease-in-out;
     }
+
+    /* Mobile Responsive Design */
+    @media (max-width: 768px) {
+        .article-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+        }
+
+        .article-content h1 { font-size: 1.5rem; margin-top: 1.25rem; margin-bottom: 0.75rem; }
+        .article-content h2 { font-size: 1.25rem; margin-top: 1.15rem; margin-bottom: 0.65rem; }
+        .article-content h3 { font-size: 1.1rem; margin-top: 1rem; margin-bottom: 0.6rem; }
+        .article-content h4 { font-size: 0.95rem; }
+
+        .article-content ul, .article-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content blockquote {
+            padding-left: 1rem;
+            margin: 1.25rem 0;
+        }
+
+        .article-content pre {
+            padding: 0.75rem;
+            margin: 1.25rem 0;
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .article-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .article-content p {
+            margin-bottom: 0.85rem;
+        }
+
+        .article-content h1 { font-size: 1.3rem; margin-top: 1rem; margin-bottom: 0.6rem; }
+        .article-content h2 { font-size: 1.1rem; margin-top: 0.9rem; margin-bottom: 0.5rem; }
+        .article-content h3 { font-size: 0.95rem; margin-top: 0.8rem; margin-bottom: 0.45rem; }
+        .article-content h4 { font-size: 0.9rem; }
+
+        .article-content ul, .article-content ol {
+            margin-left: 1.25rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.35rem;
+        }
+
+        .article-content blockquote {
+            border-left-width: 3px;
+            padding-left: 0.75rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .article-content code {
+            font-size: 0.85rem;
+            padding: 0.15rem 0.3rem;
+        }
+
+        .article-content pre {
+            padding: 0.6rem;
+            margin: 1rem 0;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+    }
 </style>
 
 <!-- Hero Header -->

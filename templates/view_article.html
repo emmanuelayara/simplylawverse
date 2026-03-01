@@ -241,23 +241,49 @@
     /* Mobile Optimizations */
     @media (max-width: 768px) {
         .review-header {
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
 
         .review-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .review-author {
+            font-size: 0.85rem;
         }
 
         .review-content {
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
 
         .article-text {
-            font-size: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-divider {
+            margin: 1.25rem 0;
+        }
+
+        .media-label {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .article-image {
+            max-height: 300px;
+            border-radius: 10px;
         }
 
         .action-section {
-            padding: 1.5rem;
+            padding: 1.25rem;
+        }
+
+        .action-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
         }
 
         .action-buttons {
@@ -268,32 +294,62 @@
         .disapprove-btn {
             width: 100%;
             justify-content: center;
-            padding: 1rem 1.5rem;
-        }
-
-        .article-image {
-            max-height: 300px;
+            padding: 0.85rem 1.25rem;
+            font-size: 0.95rem;
         }
     }
 
     @media (max-width: 576px) {
+        .review-header {
+            padding: 1rem;
+        }
+
         .review-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
         }
 
         .review-author {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .review-content {
             padding: 1rem;
         }
 
+        .article-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+        }
+
+        .content-divider {
+            height: 2px;
+            margin: 1rem 0;
+        }
+
+        .action-section {
+            padding: 1rem;
+        }
+
         .action-title {
             font-size: 1.1rem;
+            margin-bottom: 0.75rem;
         }
 
         .media-label {
+            font-size: 0.8rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .article-image {
+            max-height: 200px;
+            border-radius: 8px;
+        }
+
+        .approve-btn,
+        .disapprove-btn {
+            padding: 0.75rem 1rem;
             font-size: 0.9rem;
         }
     }
