@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Header -->
+<section class="bg-law-dark text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                <i class="fas fa-times-circle text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-4xl font-bold">Disapproved Articles</h1>
+                <p class="text-gray-300">All rejected articles awaiting action</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Articles Section -->
+<section class="py-12 bg-law-gray">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if articles.items %}
+            <!-- Articles Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {% for article in articles.items %}
+                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden border-l-4 border-red-600">
+                        <!-- Article Header -->
+                        <div class="bg-gradient-to-r from-red-500 to-red-600 p-4">
+                            <h3 class="text-xl font-bold text-white mb-2">{{ article.title }}</h3>
+                            <div class="flex items-center gap-2 text-red-100 text-sm">
+                                <i class="fas fa-times-circle"></i>
+                                <span>Disapproved</span>
+                            </div>
+                        </div>
+
+                        <!-- Article Content -->
+                        <div class="p-6">
+                            <!-- Author & Date -->
+                            <div class="flex items-center gap-4 mb-4 pb-4 border-b border-gray-200">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-user text-law-blue"></i>
+                                    <span class="text-sm text-gray-700">{{ article.author.username }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-calendar text-gray-500"></i>
+                                    <span class="text-sm text-gray-600">{{ article.date_posted.strftime('%b %d, %Y') }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Article Snippet -->
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                {{ article.content[:150] }}...
+                            </p>
+
+                            <!-- Category & Stats -->
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded text-xs font-semibold">
+                                    {{ article.category }}
+                                </span>
+                                <div class="flex items-center gap-1 text-gray-500">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="text-xs">{{ article.likes }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-2">
+                                <a href="{{ url_for('admin.admin_view_article', article_id=article.id) }}" class="flex-1 px-3 py-2 bg-law-blue text-white font-semibold rounded hover:bg-opacity-90 transition text-center text-sm">
+                                    Review
+                                </a>
+                                <button onclick="deleteArticle({{ article.id }})" class="px-3 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition text-sm">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if articles.pages > 1 %}
+                <div class="flex justify-center items-center gap-2 mt-12">
+                    {% if articles.has_prev %}
+                        <a href="{{ url_for('admin.disapproved_articles', page=articles.prev_num) }}" class="px-4 py-2 bg-law-blue text-white rounded hover:bg-opacity-90">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    {% endif %}
+
+                    {% for page_num in articles.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num == articles.page %}
+                                <span class="px-4 py-2 bg-law-blue text-white rounded font-semibold">{{ page_num }}</span>
+                            {% else %}
+                                <a href="{{ url_for('admin.disapproved_articles', page=page_num) }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">{{ page_num }}</a>
+                            {% endif %}
+                        {% else %}
+                            <span class="px-2 py-2">...</span>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if articles.has_next %}
+                        <a href="{{ url_for('admin.disapproved_articles', page=articles.next_num) }}" class="px-4 py-2 bg-law-blue text-white rounded hover:bg-opacity-90">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <!-- Stats -->
+            <div class="mt-12 p-6 bg-white rounded-lg shadow text-center">
+                <p class="text-gray-600">
+                    Total <span class="font-bold text-red-600">{{ articles.total }}</span> disapproved articles
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    Page <span class="font-semibold">{{ articles.page }}</span> of <span class="font-semibold">{{ articles.pages }}</span>
+                </p>
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="bg-white rounded-lg shadow p-12 text-center">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-3xl text-gray-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">No Disapproved Articles</h3>
+                <p class="text-gray-600 mb-6">Great! There are no disapproved articles. All articles are either pending or approved.</p>
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="inline-block px-6 py-2 bg-law-blue text-white font-semibold rounded hover:bg-opacity-90">
+                    Back to Dashboard
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    function deleteArticle(articleId) {
+        if (confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+            // For now, just log - you may want to implement actual deletion
+            console.log('Delete article:', articleId);
+        }
+    }
+</script>
+{% endblock %}

@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 
 from extensions import db
-from models import Article, Visit, Message, Comment
+from models import Article, Visit, Message, Comment, ClientIntake
 from security import admin_required
 from logger import get_logger
 
@@ -144,6 +144,34 @@ def disapprove_article(article_id):
     return redirect(url_for('admin.admin_dashboard'))
 
 
+@admin_bp.route('/admin/approved-articles')
+@login_required
+@admin_required
+def approved_articles():
+    """View all approved articles"""
+    page = request.args.get('page', 1, type=int)
+    articles = Article.query.filter_by(status='approved') \
+        .order_by(Article.date_posted.desc()) \
+        .paginate(page=page, per_page=12)
+    
+    logger.info(f"Admin {current_user.username} viewed approved articles")
+    return render_template('admin_approved_articles.html', articles=articles)
+
+
+@admin_bp.route('/admin/disapproved-articles')
+@login_required
+@admin_required
+def disapproved_articles():
+    """View all disapproved articles"""
+    page = request.args.get('page', 1, type=int)
+    articles = Article.query.filter_by(status='disapproved') \
+        .order_by(Article.date_posted.desc()) \
+        .paginate(page=page, per_page=12)
+    
+    logger.info(f"Admin {current_user.username} viewed disapproved articles")
+    return render_template('admin_disapproved_articles.html', articles=articles)
+
+
 # ============================================================================
 # MESSAGE VIEWING
 # ============================================================================
@@ -155,3 +183,66 @@ def view_messages():
     """View all contact form messages"""
     messages = Message.query.order_by(Message.date_sent.desc()).all()
     return render_template('messages.html', messages=messages)
+
+
+# ============================================================================
+# CONSULTATION REQUESTS
+# ============================================================================
+
+@admin_bp.route('/admin/consultations')
+@login_required
+@admin_required
+def consultations():
+    """View all consultation requests"""
+    page = request.args.get('page', 1, type=int)
+    status_filter = request.args.get('status', 'pending', type=str)
+    
+    query = ClientIntake.query
+    
+    # Filter by status
+    if status_filter and status_filter != 'all':
+        query = query.filter_by(status=status_filter)
+    
+    # Order by most recent first
+    consultations = query.order_by(ClientIntake.submitted_at.desc()).paginate(page=page, per_page=10)
+    
+    return render_template('admin_consultations.html', consultations=consultations, current_status=status_filter)
+
+
+@admin_bp.route('/admin/consultation/<int:consultation_id>')
+@login_required
+@admin_required
+def view_consultation(consultation_id):
+    """View detailed consultation request"""
+    consultation = ClientIntake.query.get_or_404(consultation_id)
+    return render_template('admin_view_consultation.html', consultation=consultation)
+
+
+@admin_bp.route('/admin/consultation/<int:consultation_id>/update-status', methods=['POST'])
+@login_required
+@admin_required
+def update_consultation_status(consultation_id):
+    """Update consultation status"""
+    try:
+        consultation = ClientIntake.query.get_or_404(consultation_id)
+        new_status = request.form.get('status')
+        notes = request.form.get('notes', '')
+        
+        if new_status in ['pending', 'reviewed', 'scheduled', 'archived']:
+            consultation.status = new_status
+            consultation.notes = notes
+            consultation.reviewed_at = datetime.utcnow()
+            consultation.reviewed_by_id = current_user.id
+            
+            db.session.commit()
+            logger.info(f"Consultation {consultation_id} status updated to {new_status} by {current_user.username}")
+            flash(f'Consultation status updated to {new_status}.', 'success')
+        else:
+            flash('Invalid status.', 'danger')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Update consultation error for {consultation_id}: {str(e)}")
+        flash('Error updating consultation status.', 'danger')
+    
+    return redirect(url_for('admin.view_consultation', consultation_id=consultation_id))
+

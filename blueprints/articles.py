@@ -96,10 +96,12 @@ def submit_article():
         category = sanitize_string(form.category.data, max_length=50)
         content = sanitize_html(form.content.data.strip())
         
-        # Get author and email (from current_user if logged in, otherwise from form)
+        # Get author and email - prioritize form data, fall back to current_user
         if current_user.is_authenticated:
-            author = current_user.username
-            email = current_user.email
+            # If authenticated user provided a custom author name in form, use it; otherwise use username
+            author = sanitize_string(form.author.data.strip(), max_length=100) if form.author.data else current_user.username
+            # Same for email - form takes priority, then current_user
+            email = sanitize_string(form.email.data.strip(), max_length=120) if form.email.data else current_user.email
             author_source = "authenticated user"
         else:
             author = sanitize_string(form.author.data.strip(), max_length=100) if hasattr(form, 'author') and form.author.data else 'Guest'
@@ -116,13 +118,60 @@ def submit_article():
             return redirect(request.url)
         
         try:
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            os.makedirs(upload_folder, exist_ok=True)
+            
+            # Handle cover image upload
+            cover_image_filename = None
+            if 'cover_image' in request.files and request.files['cover_image'].filename:
+                cover_image = request.files['cover_image']
+                
+                # Validate file
+                is_valid, error_msg = validate_image_file(cover_image)
+                if not is_valid:
+                    flash(f'Cover image error: {error_msg}', 'danger')
+                    return render_template('submit_article.html', form=form)
+                
+                try:
+                    cover_image_filename = get_safe_filename(cover_image.filename)
+                    full_path = os.path.join(upload_folder, cover_image_filename)
+                    cover_image.save(full_path)
+                    logger.info(f"✅ Saved cover image: {cover_image_filename}")
+                except Exception as e:
+                    flash(f'Error uploading cover image: {str(e)}', 'danger')
+                    logger.warning(f"❌ Cover image upload error: {str(e)}")
+                    return render_template('submit_article.html', form=form)
+            
+            # Handle document upload (optional)
+            document_filename = None
+            if 'document' in request.files and request.files['document'].filename:
+                document = request.files['document']
+                
+                # Validate file
+                is_valid, error_msg = validate_document_file(document)
+                if not is_valid:
+                    flash(f'Document error: {error_msg}', 'danger')
+                    return render_template('submit_article.html', form=form)
+                
+                try:
+                    document_filename = get_safe_filename(document.filename)
+                    full_path = os.path.join(upload_folder, document_filename)
+                    document.save(full_path)
+                    logger.info(f"✅ Saved document: {document_filename}")
+                except Exception as e:
+                    flash(f'Error uploading document: {str(e)}', 'danger')
+                    logger.warning(f"❌ Document upload error: {str(e)}")
+                    return render_template('submit_article.html', form=form)
+            
             article = Article(
                 author=author,
                 email=email,
                 title=title,
                 content=content,
                 category=category,
-                status='pending'  # Awaits admin approval
+                status='pending',  # Awaits admin approval
+                cover_image=cover_image_filename,
+                document_filename=document_filename
             )
             db.session.add(article)
             db.session.commit()
@@ -374,6 +423,12 @@ def edit_article(article_id):
         flash("You don't have permission to edit this article.", "danger")
         return redirect(url_for('articles.read_more', article_id=article_id))
     
+    # Prevent editing of approved/published articles
+    if article.status == 'approved':
+        logger.warning(f"Edit attempt on approved article {article_id} by {current_user.username}")
+        flash("This article has been published and cannot be edited.", "warning")
+        return redirect(url_for('articles.read_more', article_id=article_id))
+    
     form = ArticleSubmissionForm()
     
     if form.validate_on_submit():
@@ -381,6 +436,14 @@ def edit_article(article_id):
             article.title = sanitize_string(form.title.data.strip(), max_length=250)
             article.content = sanitize_html(form.content.data.strip())
             article.category = form.category.data
+            
+            # Update author if provided in form
+            if form.author.data:
+                article.author = sanitize_string(form.author.data.strip(), max_length=100)
+            
+            # Update email if provided in form
+            if form.email.data:
+                article.email = sanitize_string(form.email.data.strip(), max_length=120)
             
             # Handle file uploads
             if form.cover_image.data:
@@ -437,6 +500,12 @@ def delete_article(article_id):
     if article.author != current_user.username and not current_user.is_admin:
         logger.warning(f"Unauthorized delete attempt on article {article_id} by {current_user.username}")
         flash("You don't have permission to delete this article.", "danger")
+        return redirect(url_for('articles.read_more', article_id=article_id))
+    
+    # Prevent deletion of approved/published articles (except admins)
+    if article.status == 'approved' and not current_user.is_admin:
+        logger.warning(f"Delete attempt on approved article {article_id} by {current_user.username}")
+        flash("This article has been published and cannot be deleted.", "warning")
         return redirect(url_for('articles.read_more', article_id=article_id))
     
     try:

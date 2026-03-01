@@ -257,6 +257,9 @@ def register_routes(app):
         ]]
 
         if form.validate_on_submit():
+            app.logger.info(f"✅ Form validation passed")
+            app.logger.info(f"DEBUG: request.files keys: {list(request.files.keys())}")
+            app.logger.info(f"DEBUG: request.files: {request.files}")
             try:
                 upload_folder = current_app.config['UPLOAD_FOLDER']
                 os.makedirs(upload_folder, exist_ok=True)
@@ -273,8 +276,14 @@ def register_routes(app):
                     return render_template('submit_article.html', form=form)
 
                 cover_image_filename = None
+                print(f"DEBUG: request.files keys: {list(request.files.keys())}")
+                print(f"DEBUG: 'cover_image' in request.files: {'cover_image' in request.files}")
+                if 'cover_image' in request.files:
+                    print(f"DEBUG: request.files['cover_image']: {request.files['cover_image']}")
+                    print(f"DEBUG: filename: {request.files['cover_image'].filename}")
                 if 'cover_image' in request.files and request.files['cover_image'].filename:
                     cover_image = request.files['cover_image']
+                    print(f"DEBUG: Processing cover_image: {cover_image.filename}")
                     
                     # Validate file
                     is_valid, error_msg = validate_image_file(cover_image)

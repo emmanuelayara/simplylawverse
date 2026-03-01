@@ -13,20 +13,10 @@
 <section class="py-12 bg-white">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Progress Indicator -->
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex items-center">
             <div class="flex items-center">
                 <div class="w-10 h-10 bg-law-blue text-white rounded-full flex items-center justify-center font-bold">1</div>
                 <span class="text-law-dark font-semibold ml-3">Client Information</span>
-            </div>
-            <div class="flex-grow border-t-2 border-gray-300 mx-4"></div>
-            <div class="flex items-center text-gray-400">
-                <div class="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-bold">2</div>
-                <span class="ml-3">Select Consultation</span>
-            </div>
-            <div class="flex-grow border-t-2 border-gray-300 mx-4"></div>
-            <div class="flex items-center text-gray-400">
-                <div class="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-bold">3</div>
-                <span class="ml-3">Payment</span>
             </div>
         </div>
         
@@ -80,7 +70,7 @@
             
             <!-- Company Information -->
             <div>
-                <h3 class="text-xl font-bold text-law-dark mb-4 mt-8">Business Information</h3>
+                <h3 class="text-xl font-bold text-law-dark mb-2 mt-8">Business Information <span class="text-sm text-gray-500 font-normal">(Optional)</span></h3>
                 
                 <!-- Company Name -->
                 <div class="mb-4">
@@ -139,31 +129,6 @@
                 {{ form.submit(class="w-full px-8 py-3 bg-law-blue text-white font-bold rounded hover:bg-opacity-90 transition") }}
             </div>
         </form>
-    </div>
-</section>
-
-<!-- Info Section -->
-<section class="py-12 bg-law-gray">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-law-dark mb-8">What Happens Next?</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <div class="w-12 h-12 bg-law-blue text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">1</div>
-                <h3 class="font-bold text-law-dark mb-2">Submit Form</h3>
-                <p class="text-gray-600 text-sm">Fill out your details and tell us about your legal needs</p>
-            </div>
-            <div>
-                <div class="w-12 h-12 bg-law-blue text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">2</div>
-                <h3 class="font-bold text-law-dark mb-2">Select Time Slot</h3>
-                <p class="text-gray-600 text-sm">Choose your preferred consultation type and available date</p>
-            </div>
-            <div>
-                <div class="w-12 h-12 bg-law-blue text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">3</div>
-                <h3 class="font-bold text-law-dark mb-2">Pay & Confirm</h3>
-                <p class="text-gray-600 text-sm">Complete payment via Paystack and receive confirmation</p>
-            </div>
-        </div>
     </div>
 </section>
 

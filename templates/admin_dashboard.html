@@ -14,9 +14,27 @@
                     <p class="text-gray-300">Manage your content and track performance</p>
                 </div>
             </div>
-            <div class="bg-white bg-opacity-10 rounded-lg p-4">
-                <p class="text-sm text-gray-300">Welcome back!</p>
-                <p class="text-lg font-semibold">{{ current_user.username }}</p>
+            <div class="flex items-center gap-3">
+                <a href="{{ url_for('admin.consultations') }}" class="px-4 py-2 bg-law-blue text-white font-semibold rounded-lg hover:bg-opacity-90 transition inline-flex items-center gap-2 text-sm">
+                    <i class="fas fa-inbox"></i>
+                    Consultations
+                </a>
+                <a href="{{ url_for('admin.approved_articles') }}" class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-opacity-90 transition inline-flex items-center gap-2 text-sm">
+                    <i class="fas fa-check-circle"></i>
+                    Approved
+                </a>
+                <a href="{{ url_for('admin.disapproved_articles') }}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-opacity-90 transition inline-flex items-center gap-2 text-sm">
+                    <i class="fas fa-times-circle"></i>
+                    Disapproved
+                </a>
+                <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                    <p class="text-sm text-gray-300">Welcome back!</p>
+                    <p class="text-lg font-semibold">{{ current_user.username }}</p>
+                </div>
+                <a href="{{ url_for('auth.admin_logout') }}" class="px-4 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transition inline-flex items-center gap-2 text-sm">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
             </div>
         </div>
     </div>
@@ -82,81 +100,129 @@
 </section>
 
 <!-- Main Content -->
-<section class="py-12 bg-white">
+<section class="py-12 bg-law-gray">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Pending Articles -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <!-- Header -->
-                    <div class="bg-gradient-to-r from-law-blue to-law-blue bg-opacity-90 px-6 py-4">
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <i class="fas fa-clock"></i>
-                            Pending Articles
-                        </h2>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="p-6">
-                        {% if articles %}
-                            <div class="space-y-4">
-                                {% for article in articles.items %}
-                                    <div class="border-l-4 border-law-gold bg-gray-50 rounded p-4 hover:shadow transition">
-                                        <div class="flex justify-between items-start gap-4">
-                                            <div class="flex-1">
-                                                <h3 class="font-bold text-law-dark mb-1">
-                                                    <a href="{{ url_for('public.view_article', article_id=article.id) }}" class="hover:text-law-blue">
-                                                        {{ article.title }}
-                                                    </a>
-                                                </h3>
-                                                <p class="text-sm text-gray-600 mb-2"><i class="fas fa-user mr-1"></i>by {{ article.author }}</p>
-                                                <p class="text-sm text-gray-700">{{ article.content[:200] }}{% if article.content|length > 200 %}...{% endif %}</p>
-                                            </div>
-                                            <div class="flex flex-col gap-2 min-w-max">
-                                                <form method="POST" action="{{ url_for('admin.approve_article', article_id=article.id) }}" style="display:inline;">
-                                                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-semibold hover:bg-green-600 transition text-center w-full">
-                                                        <i class="fas fa-check mr-1"></i>Approve
-                                                    </button>
-                                                </form>
-                                                <form method="POST" action="{{ url_for('admin.disapprove_article', article_id=article.id) }}" style="display:inline;">
-                                                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded text-sm font-semibold hover:bg-red-600 transition text-center w-full">
-                                                        <i class="fas fa-times mr-1"></i>Disapprove
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-
-                            <!-- Pagination -->
-                            {% if articles.pages > 1 %}
-                                <nav class="mt-6 flex justify-center gap-2">
-                                    {% if articles.has_prev %}
-                                        <a href="{{ url_for('admin.admin_dashboard', pending_page=articles.prev_num) }}" class="px-3 py-1 border border-law-blue text-law-blue rounded">← Prev</a>
-                                    {% endif %}
-                                    {% for page_num in range(1, articles.pages + 1) %}
-                                        <a href="{{ url_for('admin.admin_dashboard', pending_page=page_num) }}" class="px-3 py-1 {% if articles.page == page_num %}bg-law-blue text-white{% else %}border border-law-blue text-law-blue{% endif %} rounded">{{ page_num }}</a>
-                                    {% endfor %}
-                                    {% if articles.has_next %}
-                                        <a href="{{ url_for('admin.admin_dashboard', pending_page=articles.next_num) }}" class="px-3 py-1 border border-law-blue text-law-blue rounded">Next →</a>
-                                    {% endif %}
-                                </nav>
-                            {% endif %}
-                        {% else %}
-                            <div class="text-center py-12">
-                                <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                                    <i class="fas fa-inbox text-gray-400 text-2xl"></i>
-                                </div>
-                                <h4 class="text-gray-600 font-semibold">No pending articles</h4>
-                                <p class="text-gray-500">All articles have been reviewed</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
+        <!-- Pending Articles Section -->
+        <div class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-law-dark flex items-center gap-2">
+                    <i class="fas fa-clock text-law-blue"></i>
+                    Pending Articles
+                </h2>
+                {% if articles %}
+                    <span class="text-sm font-semibold text-gray-600 bg-white px-4 py-2 rounded-lg">{{ articles.total }} total</span>
+                {% endif %}
             </div>
 
-            <!-- Sidebar Analytics -->
+            {% if articles %}
+                <!-- Articles Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {% for article in articles.items %}
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition overflow-hidden group">
+                            <!-- Cover Image -->
+                            <div class="relative h-48 bg-gradient-to-br from-law-blue to-law-gold overflow-hidden">
+                                {% if article.cover_image %}
+                                    <img src="{{ url_for('static', filename='uploads/' + article.cover_image) }}" alt="{{ article.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-law-blue to-law-gold">
+                                        <i class="fas fa-image text-white text-4xl opacity-30"></i>
+                                    </div>
+                                {% endif %}
+                                <!-- Status Badge -->
+                                <div class="absolute top-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    Pending
+                                </div>
+                            </div>
+
+                            <!-- Card Content -->
+                            <div class="p-5">
+                                <!-- Title -->
+                                <h3 class="font-bold text-law-dark mb-2 line-clamp-2 hover:text-law-blue transition">
+                                    {{ article.title }}
+                                </h3>
+
+                                <!-- Author & Date -->
+                                <div class="flex items-center justify-between text-xs text-gray-600 mb-3 pb-3 border-b border-gray-200">
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-user"></i>
+                                        {{ article.author.username }}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ article.date_posted.strftime('%b %d') }}
+                                    </span>
+                                </div>
+
+                                <!-- Category & Stats -->
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="inline-block bg-law-blue bg-opacity-10 text-law-blue px-3 py-1 rounded text-xs font-semibold">
+                                        {{ article.category }}
+                                    </span>
+                                    <div class="flex items-center gap-1 text-red-600 text-sm">
+                                        <i class="fas fa-heart"></i>
+                                        <span>{{ article.likes }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Preview Text -->
+                                <p class="text-sm text-gray-600 mb-4 line-clamp-3">
+                                    {{ article.content[:150] }}...
+                                </p>
+
+                                <!-- Review Button -->
+                                <a href="{{ url_for('admin.admin_view_article', article_id=article.id) }}" class="w-full px-4 py-2 bg-law-blue text-white font-semibold rounded-lg hover:bg-opacity-90 transition text-center flex items-center justify-center gap-2">
+                                    <i class="fas fa-eye"></i>
+                                    Review Article
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if articles.pages > 1 %}
+                    <div class="flex justify-center items-center gap-2 mt-8">
+                        {% if articles.has_prev %}
+                            <a href="{{ url_for('admin.admin_dashboard', pending_page=articles.prev_num) }}" class="px-4 py-2 bg-white text-law-blue font-semibold rounded-lg hover:bg-law-blue hover:text-white transition border border-law-blue">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        {% endif %}
+
+                        {% for page_num in articles.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num == articles.page %}
+                                    <span class="px-4 py-2 bg-law-blue text-white font-semibold rounded-lg">{{ page_num }}</span>
+                                {% else %}
+                                    <a href="{{ url_for('admin.admin_dashboard', pending_page=page_num) }}" class="px-4 py-2 bg-white text-law-dark font-semibold rounded-lg hover:bg-law-blue hover:text-white transition border border-gray-300">{{ page_num }}</a>
+                                {% endif %}
+                            {% else %}
+                                <span class="px-3 py-2 text-gray-400">...</span>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if articles.has_next %}
+                            <a href="{{ url_for('admin.admin_dashboard', pending_page=articles.next_num) }}" class="px-4 py-2 bg-white text-law-blue font-semibold rounded-lg hover:bg-law-blue hover:text-white transition border border-law-blue">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="bg-white rounded-lg shadow p-12 text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                        <i class="fas fa-check-circle text-gray-400 text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">No Pending Articles</h4>
+                    <p class="text-gray-600">Great! All articles have been reviewed.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Two Column Layout for Analytics & Quick Links -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Analytics Sidebar -->
             <div class="space-y-6">
                 <!-- Detailed Analytics -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -303,5 +369,21 @@
         {% endif %}
     </div>
 </section>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
 
 {% endblock %}

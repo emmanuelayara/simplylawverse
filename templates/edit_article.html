@@ -1,571 +1,285 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
+
 {% block content %}
-
-<style>
-    /* Form Container */
-    .form-container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 0 15px;
-    }
-
-    /* Form Card */
-    .form-card {
-        background: white;
-        border-radius: 15px;
-        padding: 2.5rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        border-bottom: 2px solid #dbeafe;
-        padding-bottom: 1.5rem;
-    }
-
-    .form-title {
-        color: #1e3a8a;
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-    }
-
-    .form-title i {
-        color: #3b82f6;
-        font-size: 2.2rem;
-    }
-
-    .form-subtitle {
-        color: #6b7280;
-        font-size: 1rem;
-        margin-top: 0.5rem;
-    }
-
-    /* Form Section */
-    .form-section {
-        margin-bottom: 2.5rem;
-    }
-
-    .section-title {
-        color: #1e3a8a;
-        font-weight: 700;
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .section-title i {
-        color: #3b82f6;
-        font-size: 1.4rem;
-    }
-
-    /* Form Group Styling */
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-        color: #1f2937;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .form-label i {
-        color: #3b82f6;
-        font-size: 1.1rem;
-    }
-
-    .form-control,
-    .form-control textarea,
-    .form-select {
-        border: 2px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        font-family: inherit;
-    }
-
-    .form-control:focus,
-    .form-control textarea:focus,
-    .form-select:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        outline: none;
-    }
-
-    textarea.form-control {
-        resize: vertical;
-        min-height: 250px;
-    }
-
-    .form-text {
-        color: #6b7280;
-        font-size: 0.85rem;
-        margin-top: 0.5rem;
-    }
-
-    /* File Input */
-    .file-input-wrapper {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        width: 100%;
-    }
-
-    .file-input {
-        border: 2px dashed #3b82f6;
-        border-radius: 10px;
-        padding: 2rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: #f0f9ff;
-    }
-
-    .file-input:hover {
-        border-color: #2563eb;
-        background: #e0f2fe;
-    }
-
-    .file-input i {
-        font-size: 2.5rem;
-        color: #3b82f6;
-        margin-bottom: 1rem;
-    }
-
-    /* Error Messages */
-    .error-message {
-        color: #dc2626;
-        font-size: 0.85rem;
-        margin-top: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Alert Messages */
-    .alert {
-        border-radius: 10px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-        border: 2px solid;
-    }
-
-    .alert-success {
-        background: #ecfdf5;
-        border-color: #6ee7b7;
-        color: #047857;
-    }
-
-    .alert-danger {
-        background: #fef2f2;
-        border-color: #fecaca;
-        color: #dc2626;
-    }
-
-    .alert-info {
-        background: #eff6ff;
-        border-color: #bfdbfe;
-        color: #1e40af;
-    }
-
-    .alert i {
-        margin-right: 0.5rem;
-    }
-
-    /* Character Counter */
-    .char-counter {
-        color: #6b7280;
-        font-size: 0.85rem;
-        text-align: right;
-        margin-top: 0.5rem;
-    }
-
-    .char-counter.warning {
-        color: #f59e0b;
-    }
-
-    .char-counter.danger {
-        color: #dc2626;
-    }
-
-    /* Form Actions */
-    .form-actions {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2.5rem;
-        padding-top: 1.5rem;
-        border-top: 2px solid #e5e7eb;
-        flex-wrap: wrap;
-    }
-
-    .btn-action {
-        flex: 1;
-        min-width: 150px;
-        padding: 0.875rem 2rem;
-        border: none;
-        border-radius: 25px;
-        font-weight: 600;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        text-decoration: none;
-    }
-
-    .btn-save {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
-        box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-save:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        color: white;
-    }
-
-    .btn-cancel {
-        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-        color: white;
-        box-shadow: 0 2px 10px rgba(107, 114, 128, 0.3);
-    }
-
-    .btn-cancel:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
-        color: white;
-        text-decoration: none;
-    }
-
-    .btn-delete {
-        background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-        color: white;
-        box-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
-    }
-
-    .btn-delete:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-        color: white;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .form-container {
-            margin: 1rem auto;
-        }
-
-        .form-card {
-            padding: 1.5rem;
-        }
-
-        .form-title {
-            font-size: 1.5rem;
-        }
-
-        .form-actions {
-            flex-direction: column;
-        }
-
-        .btn-action {
-            width: 100%;
-            min-width: auto;
-        }
-
-        textarea.form-control {
-            min-height: 200px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .form-card {
-            padding: 1.25rem;
-        }
-
-        .form-title {
-            font-size: 1.25rem;
-            gap: 0.5rem;
-        }
-
-        .form-title i {
-            font-size: 1.75rem;
-        }
-
-        .form-subtitle {
-            font-size: 0.9rem;
-        }
-
-        .section-title {
-            font-size: 1rem;
-        }
-
-        textarea.form-control {
-            min-height: 180px;
-        }
-
-        .file-input {
-            padding: 1.5rem;
-        }
-
-        .file-input i {
-            font-size: 2rem;
-        }
-    }
-
-    /* Loading Animation */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .form-card {
-        animation: fadeIn 0.5s ease-out;
-    }
-</style>
-
-<div class="form-container">
-    <!-- Form Card -->
-    <div class="form-card">
-        <!-- Form Header -->
-        <div class="form-header">
-            <h1 class="form-title">
-                <i class="fas fa-pencil-alt"></i>
-                Edit Article
-            </h1>
-            <p class="form-subtitle">Update your article content and metadata</p>
+<!-- Edit Article Hero -->
+<section class="bg-law-dark text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <h1 class="text-5xl font-bold mb-6">Edit Article</h1>
+            <p class="text-xl text-gray-300">
+                Update your article content, media, and metadata. All changes will be saved immediately.
+            </p>
         </div>
-
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'info' }}">
-                        <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' if category == 'danger' else 'info-circle' }}"></i>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <!-- Edit Article Form -->
-        <form method="POST" action="{{ url_for('articles.edit_article', article_id=article.id) }}" enctype="multipart/form-data" novalidate>
-            {{ form.hidden_tag() }}
-
-            <!-- Upload Feedback Component -->
-            {% include 'components/upload_feedback.html' %}
-
-            <!-- Article Details Section -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <i class="fas fa-heading"></i>
-                    Article Details
-                </h2>
-
-                <!-- Title Field -->
-                <div class="form-group">
-                    {{ form.title.label(class="form-label") }}
-                    {% if form.title.errors %}
-                        {{ form.title(class="form-control is-invalid") }}
-                        <div class="error-message">
-                            <i class="fas fa-times-circle"></i>
-                            {{ form.title.errors[0] }}
-                        </div>
-                    {% else %}
-                        {{ form.title(class="form-control", placeholder="Enter article title") }}
-                        <small class="form-text">
-                            <i class="fas fa-lightbulb"></i>
-                            A clear, descriptive title helps readers understand your article
-                        </small>
-                    {% endif %}
-                </div>
-
-                <!-- Category Field -->
-                <div class="form-group">
-                    {{ form.category.label(class="form-label") }}
-                    {% if form.category.errors %}
-                        {{ form.category(class="form-select is-invalid") }}
-                        <div class="error-message">
-                            <i class="fas fa-times-circle"></i>
-                            {{ form.category.errors[0] }}
-                        </div>
-                    {% else %}
-                        {{ form.category(class="form-select", id="category-select") }}
-                        <small class="form-text">
-                            <i class="fas fa-tag"></i>
-                            Choose the category that best fits your article
-                        </small>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Content Section -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <i class="fas fa-file-alt"></i>
-                    Article Content
-                </h2>
-
-                <!-- Content Field -->
-                <div class="form-group">
-                    {{ form.content.label(class="form-label") }}
-                    {% if form.content.errors %}
-                        {{ form.content(class="form-control is-invalid", rows=12, placeholder="Write your article content here...") }}
-                        <div class="error-message">
-                            <i class="fas fa-times-circle"></i>
-                            {{ form.content.errors[0] }}
-                        </div>
-                    {% else %}
-                        {{ form.content(class="form-control", rows=12, placeholder="Write your article content here...") }}
-                        <div class="char-counter">
-                            <span id="char-count">0</span> / 50,000 characters
-                        </div>
-                        <small class="form-text">
-                            <i class="fas fa-pen"></i>
-                            Minimum 50 characters, maximum 50,000 characters
-                        </small>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Media Section -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <i class="fas fa-image"></i>
-                    Media Attachments
-                </h2>
-
-                <!-- Cover Image Field -->
-                <div class="form-group">
-                    {{ form.cover_image.label(class="form-label") }}
-                    <div class="file-input-wrapper">
-                        <div class="file-input" onclick="document.getElementById('cover-image').click()">
-                            <i class="fas fa-image"></i>
-                            <p><strong>Click to upload</strong> or drag and drop</p>
-                            <small>PNG, JPG, GIF (max 5MB)</small>
-                            {{ form.cover_image(id="cover-image", style="display: none;") }}
-                        </div>
-                    </div>
-                    {% if article.image_filename %}
-                        <small class="form-text mt-2">
-                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                            Current image: {{ article.image_filename }}
-                        </small>
-                    {% endif %}
-                    {% if form.cover_image.errors %}
-                        <div class="error-message">
-                            <i class="fas fa-times-circle"></i>
-                            {{ form.cover_image.errors[0] }}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Document Field -->
-                <div class="form-group">
-                    {{ form.document.label(class="form-label") }}
-                    <div class="file-input-wrapper">
-                        <div class="file-input" onclick="document.getElementById('document-file').click()">
-                            <i class="fas fa-file-pdf"></i>
-                            <p><strong>Click to upload</strong> or drag and drop</p>
-                            <small>PDF, DOC, DOCX (max 10MB)</small>
-                            {{ form.document(id="document-file", style="display: none;") }}
-                        </div>
-                    </div>
-                    {% if article.document_filename %}
-                        <small class="form-text mt-2">
-                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                            Current document: {{ article.document_filename }}
-                        </small>
-                    {% endif %}
-                    {% if form.document.errors %}
-                        <div class="error-message">
-                            <i class="fas fa-times-circle"></i>
-                            {{ form.document.errors[0] }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="form-actions">
-                <button type="submit" class="btn-action btn-save">
-                    <i class="fas fa-save"></i>
-                    Save Changes
-                </button>
-                <a href="{{ url_for('articles.read_more', article_id=article.id) }}" class="btn-action btn-cancel">
-                    <i class="fas fa-times"></i>
-                    Cancel
-                </a>
-                <button type="button" class="btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                    <i class="fas fa-trash"></i>
-                    Delete Article
-                </button>
-            </div>
-        </form>
     </div>
-</div>
+</section>
+
+<!-- Edit Form Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if article.status == 'approved' %}
+        <!-- Approved Article Notice -->
+        <div class="mb-8 bg-amber-50 border-2 border-amber-400 rounded-lg p-8 text-center">
+            <div class="flex justify-center mb-4">
+                <i class="fas fa-lock text-amber-600 text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-amber-900 mb-2">Article Published</h2>
+            <p class="text-amber-800 text-lg mb-4">
+                This article has been published and is now live on the website. Published articles cannot be edited or deleted to maintain content integrity.
+            </p>
+            <p class="text-amber-700 text-sm mb-6">
+                If you need to make changes, please contact the administrator.
+            </p>
+            <a href="{{ url_for('articles.read_more', article_id=article.id) }}" class="inline-block px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg transition">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Article
+            </a>
+        </div>
+        {% else %}
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
+            <!-- Form Header -->
+            <div class="bg-law-blue text-white p-8">
+                <h2 class="text-3xl font-bold mb-2">Article Details</h2>
+                <p class="text-blue-100">Update content, media, and article information</p>
+            </div>
+            
+            <!-- Form Body -->
+            <div class="p-8">
+                <!-- Upload Feedback Component -->
+                {% include 'components/upload_feedback.html' %}
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="mb-6 p-4 rounded-lg border-l-4 {% if category == 'success' %}bg-green-50 border-green-500 text-green-800{% elif category == 'danger' %}bg-red-50 border-red-500 text-red-800{% else %}bg-blue-50 border-blue-500 text-blue-800{% endif %}">
+                                <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' if category == 'danger' else 'info-circle' }} mr-2"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Edit Article Form -->
+                <form method="POST" action="{{ url_for('articles.edit_article', article_id=article.id) }}" enctype="multipart/form-data" novalidate class="space-y-8">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Article Details Section -->
+                    <div>
+                        <h3 class="text-xl font-bold text-law-dark mb-6 pb-3 border-b-2 border-gray-200">
+                            <i class="fas fa-heading text-law-blue mr-2"></i>Article Details
+                        </h3>
+
+                        <!-- Title Field -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-law-dark mb-2">
+                                <i class="fas fa-heading mr-2 text-law-blue"></i>{{ form.title.label }}
+                            </label>
+                            {% if form.title.errors %}
+                                {{ form.title(class="w-full px-4 py-3 border-2 border-red-500 rounded-lg focus:border-red-500 focus:outline-none transition") }}
+                                <p class="text-red-600 text-sm mt-1">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.title.errors[0] }}
+                                </p>
+                            {% else %}
+                                {{ form.title(class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none transition", placeholder="Enter article title") }}
+                                <p class="text-sm text-gray-500 mt-1">A clear, descriptive title helps readers understand your article</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Category Field -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-law-dark mb-2">
+                                <i class="fas fa-tag mr-2 text-law-blue"></i>{{ form.category.label }}
+                            </label>
+                            {% if form.category.errors %}
+                                {{ form.category(class="w-full px-4 py-3 border-2 border-red-500 rounded-lg focus:border-red-500 focus:outline-none transition", id="category-select") }}
+                                <p class="text-red-600 text-sm mt-1">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.category.errors[0] }}
+                                </p>
+                            {% else %}
+                                {{ form.category(class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none transition", id="category-select") }}
+                                <p class="text-sm text-gray-500 mt-1">Choose the category that best fits your article</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Author Name Field -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-law-dark mb-2">
+                                <i class="fas fa-user mr-2 text-law-blue"></i>{{ form.author.label }}
+                            </label>
+                            {% if form.author.errors %}
+                                {{ form.author(class="w-full px-4 py-3 border-2 border-red-500 rounded-lg focus:border-red-500 focus:outline-none transition") }}
+                                <p class="text-red-600 text-sm mt-1">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.author.errors[0] }}
+                                </p>
+                            {% else %}
+                                {{ form.author(class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none transition", placeholder="Enter author name") }}
+                                <p class="text-sm text-gray-500 mt-1">Update the author name that appears on this article</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Email Field -->
+                        <div>
+                            <label class="block text-sm font-semibold text-law-dark mb-2">
+                                <i class="fas fa-envelope mr-2 text-law-blue"></i>{{ form.email.label }}
+                            </label>
+                            {% if form.email.errors %}
+                                {{ form.email(class="w-full px-4 py-3 border-2 border-red-500 rounded-lg focus:border-red-500 focus:outline-none transition") }}
+                                <p class="text-red-600 text-sm mt-1">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.email.errors[0] }}
+                                </p>
+                            {% else %}
+                                {{ form.email(class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none transition", placeholder="Enter contact email") }}
+                                <p class="text-sm text-gray-500 mt-1">Email address for article notifications and inquiries</p>
+                            {% endif %}
+                        </div>
+
+                    <!-- Article Content Section -->
+                    <div>
+                        <h3 class="text-xl font-bold text-law-dark mb-6 pb-3 border-b-2 border-gray-200">
+                            <i class="fas fa-file-alt text-law-blue mr-2"></i>Article Content
+                        </h3>
+
+                        <!-- Content Field -->
+                        <div>
+                            <label class="block text-sm font-semibold text-law-dark mb-2">
+                                <i class="fas fa-pen mr-2 text-law-blue"></i>{{ form.content.label }}
+                            </label>
+                            {% if form.content.errors %}
+                                {{ form.content(class="w-full px-4 py-3 border-2 border-red-500 rounded-lg focus:border-red-500 focus:outline-none transition", rows=12, placeholder="Write your article content here...") }}
+                                <p class="text-red-600 text-sm mt-1">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.content.errors[0] }}
+                                </p>
+                            {% else %}
+                                {{ form.content(class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none transition", rows=12, placeholder="Write your article content here...") }}
+                                <div class="text-right text-sm text-gray-500 mt-2">
+                                    <span id="char-count">0</span> / 50,000 characters
+                                </div>
+                                <p class="text-sm text-gray-500">Minimum 50 characters, maximum 50,000 characters</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Media Section -->
+                    <div>
+                        <h3 class="text-xl font-bold text-law-dark mb-6 pb-3 border-b-2 border-gray-200">
+                            <i class="fas fa-image text-law-blue mr-2"></i>Media & Attachments
+                        </h3>
+
+                        <!-- Cover Image Field -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-law-dark mb-3">
+                                <i class="fas fa-image mr-2 text-law-blue"></i>{{ form.cover_image.label }}
+                            </label>
+                            <div class="file-input-wrapper" onclick="document.getElementById('cover-image').click()" style="cursor: pointer;">
+                                <div class="border-2 border-dashed border-law-blue rounded-lg p-8 text-center transition hover:bg-blue-50 hover:border-opacity-70">
+                                    <i class="fas fa-cloud-upload-alt text-law-blue text-4xl mb-3 block"></i>
+                                    <p class="font-semibold text-gray-700"><strong>Click to upload</strong> or drag and drop</p>
+                                    <small class="text-gray-500">PNG, JPG, GIF up to 5MB</small>
+                                    {{ form.cover_image(id="cover-image", style="display: none;") }}
+                                </div>
+                            </div>
+                            {% if article.cover_image %}
+                                <p class="text-sm text-green-600 mt-2">
+                                    <i class="fas fa-check-circle mr-1"></i>Current image: {{ article.cover_image }}
+                                </p>
+                            {% endif %}
+                            {% if form.cover_image.errors %}
+                                <p class="text-red-600 text-sm mt-2">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.cover_image.errors[0] }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Document Field -->
+                        <div>
+                            <label class="block text-sm font-semibold text-law-dark mb-3">
+                                <i class="fas fa-file-pdf mr-2 text-law-blue"></i>{{ form.document.label }}
+                            </label>
+                            <div class="file-input-wrapper" onclick="document.getElementById('document-file').click()" style="cursor: pointer;">
+                                <div class="border-2 border-dashed border-law-blue rounded-lg p-8 text-center transition hover:bg-blue-50 hover:border-opacity-70">
+                                    <i class="fas fa-cloud-upload-alt text-law-blue text-4xl mb-3 block"></i>
+                                    <p class="font-semibold text-gray-700"><strong>Click to upload</strong> or drag and drop</p>
+                                    <small class="text-gray-500">PDF, DOC, DOCX up to 10MB</small>
+                                    {{ form.document(id="document-file", style="display: none;") }}
+                                </div>
+                            </div>
+                            {% if article.document_filename %}
+                                <p class="text-sm text-green-600 mt-2">
+                                    <i class="fas fa-check-circle mr-1"></i>Current document: {{ article.document_filename }}
+                                </p>
+                            {% endif %}
+                            {% if form.document.errors %}
+                                <p class="text-red-600 text-sm mt-2">
+                                    <i class="fas fa-times-circle mr-1"></i>{{ form.document.errors[0] }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-6 mt-8 border-t border-gray-200">
+                        <button type="submit" class="flex-1 bg-law-blue hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105 flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                        <a href="{{ url_for('articles.read_more', article_id=article.id) }}" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105 flex items-center justify-center gap-2">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </a>
+                        <button type="button" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105 flex items-center justify-center gap-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
 
 <!-- Delete Confirmation Modal -->
+{% if article.status != 'approved' %}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-danger">
-                <h5 class="modal-title text-danger" id="deleteModalLabel">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Delete Article
+        <div class="modal-content rounded-lg shadow-xl">
+            <div class="modal-header border-b-2 border-red-500 bg-red-50">
+                <h5 class="modal-title text-red-600 font-bold" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Delete Article
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p class="mb-0">
-                    <strong>Are you sure you want to delete this article?</strong>
-                </p>
-                <p class="text-muted mt-2 mb-0">
+            <div class="modal-body p-6">
+                <p class="font-bold text-gray-800 mb-3">Are you sure you want to delete this article?</p>
+                <p class="text-gray-600 mb-4">
                     This action cannot be undone. All comments associated with this article will also be removed.
                 </p>
-                <div class="alert alert-warning mt-3 mb-0">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Article:</strong> {{ article.title }}
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+                    <p class="text-sm text-yellow-800">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Article:</strong> {{ article.title }}
+                    </p>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer bg-gray-50">
+                <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600" data-bs-dismiss="modal">
+                    Cancel
+                </button>
                 <form method="POST" action="{{ url_for('articles.delete_article', article_id=article.id) }}" style="display: inline;">
                     {{ form.hidden_tag() }}
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                        Delete Permanently
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                        <i class="fas fa-trash mr-2"></i>Delete Permanently
                     </button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+{% endif %}
 
-<!-- Character Counter Script -->
+<!-- Character Counter & File Upload Scripts -->
 <script>
+    // Character counter
     const contentField = document.getElementById('content');
     const charCount = document.getElementById('char-count');
 
@@ -573,19 +287,9 @@
         function updateCharCount() {
             const count = contentField.value.length;
             charCount.textContent = count;
-            
-            // Show warning at 80%
-            if (count > 40000) {
-                charCount.parentElement.classList.add('warning');
-            } else if (count > 49000) {
-                charCount.parentElement.classList.add('danger');
-            } else {
-                charCount.parentElement.classList.remove('warning', 'danger');
-            }
         }
 
         contentField.addEventListener('input', updateCharCount);
-        // Initial count
         updateCharCount();
     }
 
@@ -593,7 +297,7 @@
     ['cover-image', 'document-file'].forEach(id => {
         const input = document.getElementById(id);
         const wrapper = input.closest('.file-input-wrapper');
-        const display = wrapper.querySelector('.file-input');
+        const display = wrapper.querySelector('div');
 
         if (wrapper && display) {
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -606,22 +310,16 @@
             }
 
             ['dragenter', 'dragover'].forEach(eventName => {
-                display.addEventListener(eventName, highlight, false);
+                display.addEventListener(eventName, () => {
+                    display.classList.add('bg-blue-50', 'border-opacity-70');
+                }, false);
             });
 
             ['dragleave', 'drop'].forEach(eventName => {
-                display.addEventListener(eventName, unhighlight, false);
+                display.addEventListener(eventName, () => {
+                    display.classList.remove('bg-blue-50', 'border-opacity-70');
+                }, false);
             });
-
-            function highlight(e) {
-                display.style.borderColor = '#2563eb';
-                display.style.background = '#e0f2fe';
-            }
-
-            function unhighlight(e) {
-                display.style.borderColor = '#3b82f6';
-                display.style.background = '#f0f9ff';
-            }
 
             display.addEventListener('drop', handleDrop, false);
 

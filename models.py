@@ -342,9 +342,9 @@ class ClientIntake(db.Model):
     email = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     
-    # Company information
-    company_name = db.Column(db.String(200), nullable=False)
-    cac_status = db.Column(db.String(50), nullable=False)  # "Registered" or "Not registered"
+    # Company information (optional)
+    company_name = db.Column(db.String(200), nullable=True)
+    cac_status = db.Column(db.String(50), nullable=True)  # "Registered", "Not registered", or null
     
     # Legal issue details
     issue_description = db.Column(db.Text, nullable=False)

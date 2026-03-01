@@ -239,18 +239,18 @@ class ClientIntakeForm(FlaskForm):
     ])
     
     company_name = StringField('Company Name', validators=[
-        DataRequired('Company name is required.'),
+        Optional(),
         Length(min=2, max=200, message='Company name must be between 2 and 200 characters.'),
         validate_no_xss
     ])
     
     cac_status = SelectField('CAC Registration Status', 
         choices=[
-            ('', 'Select CAC Status'),
+            ('', 'Select CAC Status (Optional)'),
             ('registered', 'Company Registered with CAC'),
             ('not_registered', 'Not Yet Registered with CAC'),
         ],
-        validators=[DataRequired('Please select your CAC status.')]
+        validators=[Optional()]
     )
     
     issue_description = TextAreaField('Describe Your Legal Issue', validators=[
