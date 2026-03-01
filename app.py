@@ -41,6 +41,25 @@ def create_app():
     def inject_now():
         return {'now': datetime}
     
+    # Custom Jinja2 filter for linebreaks (Django-like behavior)
+    def linebreaks(value):
+        """Convert newlines to <br> tags and paragraphs to <p> tags"""
+        from markupsafe import Markup
+        if not value:
+            return ''
+        # Replace double newlines with paragraph tags
+        paragraphs = value.split('\n\n')
+        formatted_paragraphs = []
+        for para in paragraphs:
+            # Replace single newlines with <br> tags
+            para = para.replace('\n', '<br>')
+            # Wrap in paragraph tags
+            if para.strip():
+                formatted_paragraphs.append(f'<p>{para}</p>')
+        return Markup('\n'.join(formatted_paragraphs))
+    
+    app.jinja_env.filters['linebreaks'] = linebreaks
+    
     # ------------------ INIT EXTENSIONS ------------------
     db.init_app(app)
     login_manager.init_app(app)

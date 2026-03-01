@@ -63,11 +63,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <p class="text-xs text-gray-500 font-semibold uppercase mb-2">Author</p>
-                                <p class="text-law-dark font-bold text-lg">{{ article.author.username }}</p>
+                                <p class="text-law-dark font-bold text-lg">{{ article.author }}</p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500 font-semibold uppercase mb-2">Email</p>
-                                <p class="text-law-blue font-medium"><a href="mailto:{{ article.author.email }}" class="hover:underline">{{ article.author.email }}</a></p>
+                                <p class="text-law-blue font-medium"><a href="mailto:{{ article.email }}" class="hover:underline">{{ article.email }}</a></p>
                             </div>
                         </div>
                         
@@ -101,7 +101,7 @@
                 <div class="bg-white rounded-lg shadow p-8">
                     <h3 class="text-lg font-bold text-law-dark mb-6 pb-4 border-b border-gray-200">Article Content</h3>
                     <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                        {{ article.content | safe }}
+                        {{ article.content|linebreaks }}
                     </div>
                 </div>
 
@@ -189,6 +189,10 @@
                                 Disapprove
                             </button>
                         </form>
+                        <a href="{{ url_for('articles.edit_article', article_id=article.id) }}" class="block w-full px-6 py-3 bg-law-blue hover:bg-opacity-90 text-white font-bold rounded-lg transition text-center inline-flex items-center justify-center gap-2 shadow">
+                            <i class="fas fa-edit"></i>
+                            Edit Article
+                        </a>
                     </div>
                 </div>
                 {% endif %}
