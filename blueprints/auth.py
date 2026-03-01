@@ -72,13 +72,17 @@ def admin_login():
     """Authenticate and log in admin user"""
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        # Check if input is email or username
+        login_input = form.username.data
+        user = User.query.filter(
+            (User.username == login_input) | (User.email == login_input)
+        ).first()
         if user and check_password_hash(user.password, form.password.data) and user.is_admin:
             login_user(user)
             logger.info(f"Admin login successful: {user.username}")
             return redirect(url_for('admin.admin_dashboard'))
         # Generic message to prevent user enumeration
-        logger.warning(f"Failed login attempt for: {form.username.data}")
+        logger.warning(f"Failed login attempt for: {login_input}")
         flash('Invalid credentials or not an admin.', 'danger')
     
     return render_template('admin_login.html', form=form)
@@ -91,7 +95,7 @@ def admin_logout():
     logger.info(f"User logout: {current_user.username}")
     logout_user()
     flash('You have been logged out.', 'info')
-    return redirect(url_for('public.home'))
+    return redirect(url_for('auth.admin_login'))
 
 
 # ============================================================================

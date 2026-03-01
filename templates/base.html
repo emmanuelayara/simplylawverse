@@ -6,6 +6,9 @@
     <meta name="description" content="{{ page_description or 'Professional corporate legal services in Nigeria' }}">
     <meta name="keywords" content="corporate law, Nigeria, legal services, consultations">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logo.jpeg') }}">
+    
     <!-- SEO Meta Tags -->
     <title>{% block title %}{{ page_title or 'Simply Law - Corporate Legal Services' }}{% endblock %}</title>
     {% block seo_meta %}{% endblock %}
