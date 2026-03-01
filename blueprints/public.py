@@ -31,7 +31,7 @@ def home():
     return render_template(
         'pages/home.html',
         featured_articles=featured_articles,
-        page_title='Simply Lawverse - Corporate Legal Services',
+        page_title='Simply Law - Corporate Legal Services',
         page_description='Professional corporate legal services for Nigerian businesses'
     )
 

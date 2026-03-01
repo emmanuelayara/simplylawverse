@@ -26,19 +26,10 @@
                         <p class="font-semibold text-law-dark text-sm">Timeline:</p>
                         <p class="text-gray-600">{{ service.typical_timeline }}</p>
                     </div>
-                    {% if service.base_price %}
-                    <div>
-                        <p class="font-semibold text-law-dark text-sm">Starting From:</p>
-                        <p class="text-law-gold font-bold">₦{{ "{:,.0f}".format(service.base_price) }}</p>
-                    </div>
-                    {% endif %}
                 </div>
                 
-                <a href="{{ url_for('services.service_detail', slug=service.slug) }}" class="inline-block w-full py-2 bg-law-blue text-white font-bold rounded text-center hover:bg-opacity-90 transition mb-3">
-                    Learn More
-                </a>
-                <a href="{{ url_for('bookings.index') }}" class="inline-block w-full py-2 border-2 border-law-blue text-law-blue font-bold rounded text-center hover:bg-law-blue hover:text-white transition">
-                    Book Consultation
+                <a href="https://wa.me/2347063596624?text=Hi!%20I%20am%20interested%20in%20your%20{{ service.name|replace(' ', '%20') }}%20service.%20Can%20we%20discuss%20this%20further?" target="_blank" class="inline-block w-full py-2 bg-law-blue text-white font-bold rounded text-center hover:bg-opacity-90 transition">
+                    Contact Us
                 </a>
             </div>
             {% endfor %}

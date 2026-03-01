@@ -1,8 +1,8 @@
-# Simply Lawverse - Development Server Launcher
+# Simply Law - Development Server Launcher
 # This script properly sets up and runs the Flask development server
 
 Write-Host "================================" -ForegroundColor Cyan
-Write-Host "Simply Lawverse - Dev Server" -ForegroundColor Cyan
+Write-Host "Simply Law - Dev Server" -ForegroundColor Cyan
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 

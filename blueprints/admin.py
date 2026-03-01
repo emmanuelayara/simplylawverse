@@ -37,6 +37,7 @@ def admin_dashboard():
 
     pending_page = request.args.get('pending_page', 1, type=int)
     approved_page = request.args.get('approved_page', 1, type=int)
+    disapproved_page = request.args.get('disapproved_page', 1, type=int)
     per_page = 3
 
     pending = Article.query.filter_by(status='pending') \
@@ -47,10 +48,15 @@ def admin_dashboard():
         .order_by(Article.date_posted.desc()) \
         .paginate(page=approved_page, per_page=per_page)
 
+    disapproved = Article.query.filter_by(status='disapproved') \
+        .order_by(Article.date_posted.desc()) \
+        .paginate(page=disapproved_page, per_page=per_page)
+
     return render_template(
         'admin_dashboard.html',
         articles=pending,
-        approved_articles=approved,
+        approved_articles=approved.items,
+        disapproved_articles=disapproved.items,
         total_articles=total_articles,
         total_visits=total_visits,
         daily_visits=daily_visits,

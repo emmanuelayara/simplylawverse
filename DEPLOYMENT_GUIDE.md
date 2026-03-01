@@ -1,4 +1,4 @@
-# Simply Lawverse - Production Deployment Guide
+# Simply Law - Production Deployment Guide
 
 A production-ready corporate law firm website for Nigerian lawyers offering corporate legal services, online consultations, and legal articles with Paystack payment integration.
 

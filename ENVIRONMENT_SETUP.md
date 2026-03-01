@@ -1,4 +1,4 @@
-# Environment Setup Guide - Simply Lawverse
+# Environment Setup Guide - Simply Law
 
 ## Quick Start
 

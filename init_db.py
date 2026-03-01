@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Initialize and seed Simply Lawverse database"""
+"""Initialize and seed Simply Law database"""
 import os
 import sys
 from pathlib import Path
@@ -15,7 +15,7 @@ def main():
         
         with app.app_context():
             print("\n" + "="*60)
-            print("Simply Lawverse - Database Initialization")
+            print("Simply Law - Database Initialization")
             print("="*60 + "\n")
             
             # Check if database exists and is complete
@@ -78,11 +78,11 @@ def main():
             # Add services
             services = [
                 Service(
-                    name="Corporate Law",
-                    slug="corporate-law",
-                    description="Expert guidance on corporate governance, mergers, and acquisitions",
-                    detailed_content="We provide comprehensive corporate legal services including company formation, corporate restructuring, mergers and acquisitions, and ongoing governance support.",
-                    who_needs_it="Businesses and corporations seeking expert corporate counsel",
+                    name="Company Registration & CAC Filings",
+                    slug="company-registration",
+                    description="Expert guidance through company registration with CAC, including name search, documentation, and compliance setup.",
+                    detailed_content="We handle the complete CAC registration process including company name availability search, documentation preparation, filing, and compliance setup. Legal recognition and tax compliance guaranteed.",
+                    who_needs_it="New business owners, entrepreneurs establishing formal companies, investors setting up corporate entities.",
                     typical_timeline="2-4 weeks",
                     base_price=50000,
                     icon_class="fas fa-building",
@@ -90,36 +90,36 @@ def main():
                     is_active=True
                 ),
                 Service(
-                    name="Family Law",
-                    slug="family-law",
-                    description="Compassionate support for family matters including divorce, custody, and inheritance",
-                    detailed_content="We handle all aspects of family law with sensitivity and professionalism. Our services include divorce proceedings, child custody arrangements, inheritance disputes, and domestic matters.",
-                    who_needs_it="Individuals and families navigating personal legal matters",
-                    typical_timeline="4-8 weeks",
-                    base_price=30000,
-                    icon_class="fas fa-heart",
+                    name="Contract Drafting & Review",
+                    slug="contract-drafting",
+                    description="Professional drafting and thorough review of business contracts to protect your interests.",
+                    detailed_content="We provide expert drafting and review of commercial contracts, employment agreements, partnerships, NDAs, and vendor contracts. Tailored terms that protect your business.",
+                    who_needs_it="Businesses negotiating contracts, entrepreneurs creating formal agreements, companies needing contract review.",
+                    typical_timeline="3-7 days",
+                    base_price=35000,
+                    icon_class="fas fa-file-contract",
                     order=2,
                     is_active=True
                 ),
                 Service(
-                    name="Real Estate Law",
-                    slug="real-estate-law",
-                    description="Complete property transactions and dispute resolution services",
-                    detailed_content="From property purchase and sale to leasing agreements and dispute resolution, we provide comprehensive real estate legal services.",
-                    who_needs_it="Property buyers, sellers, and investors",
-                    typical_timeline="3-6 weeks",
-                    base_price=40000,
-                    icon_class="fas fa-home",
+                    name="Corporate Governance & Compliance",
+                    slug="compliance",
+                    description="Strategic guidance on corporate governance structures and regulatory compliance for your business.",
+                    detailed_content="Proper governance and compliance protect your business and set you up for growth. Services include corporate structure, shareholder agreements, board governance, and regulatory compliance.",
+                    who_needs_it="Growing companies, startups with investors, businesses facing regulatory changes, companies seeking governance upgrades.",
+                    typical_timeline="2-4 weeks",
+                    base_price=75000,
+                    icon_class="fas fa-shield-alt",
                     order=3,
                     is_active=True
                 ),
                 Service(
-                    name="Criminal Defense",
-                    slug="criminal-defense",
-                    description="Strong representation and defense strategies in criminal matters",
-                    detailed_content="Our experienced criminal defense lawyers provide aggressive representation at all levels of the criminal justice system.",
-                    who_needs_it="Individuals facing criminal charges",
-                    typical_timeline="Varies by case",
+                    name="Business & Corporate Law",
+                    slug="corporate-law",
+                    description="Comprehensive legal solutions for business operations, mergers, and corporate matters.",
+                    detailed_content="We provide comprehensive corporate legal services including corporate restructuring, mergers and acquisitions, ongoing governance support, and general business legal matters.",
+                    who_needs_it="Businesses and corporations seeking expert corporate counsel and legal support.",
+                    typical_timeline="2-4 weeks",
                     base_price=50000,
                     icon_class="fas fa-gavel",
                     order=4,

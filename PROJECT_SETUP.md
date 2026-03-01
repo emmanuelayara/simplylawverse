@@ -1,8 +1,8 @@
-# Simply Lawverse - Project Setup Guide
+# Simply Law - Project Setup Guide
 
 ## 🎯 Project Overview
 
-**Simply Lawverse** is a production-ready corporate law firm website built with:
+**Simply Law** is a production-ready corporate law firm website built with:
 - **Frontend**: HTML/CSS (Tailwind CSS)
 - **Backend**: Flask + SQLAlchemy
 - **Database**: PostgreSQL

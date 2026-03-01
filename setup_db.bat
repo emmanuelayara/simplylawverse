@@ -1,8 +1,8 @@
 @echo off
-REM Initialize Simply Lawverse Database
+REM Initialize Simply Law Database
 echo.
 echo =====================================
-echo Simply Lawverse - Database Setup
+echo Simply Law - Database Setup
 echo =====================================
 echo.
 

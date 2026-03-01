@@ -1,5 +1,5 @@
 """
-Database seeding script for Simply Lawverse
+Database seeding script for Simply Law
 Populates initial data for services, consultation types, and admin availability
 """
 from app import create_app, db
@@ -64,7 +64,7 @@ def seed_services():
             who_needs_it="New business owners, entrepreneurs establishing formal companies, investors setting up corporate entities.",
             typical_timeline="2-4 weeks",
             base_price=50000,
-            seo_title="Company Registration & CAC Filings - Simply Lawverse",
+            seo_title="Company Registration & CAC Filings - Simply Law",
             seo_description="Expert CAC company registration in Nigeria. Professional guidance through documentation, filing, and compliance setup.",
             seo_keywords="CAC registration, company registration Nigeria, business setup, corporate formation",
             order=1,
@@ -94,7 +94,7 @@ def seed_services():
             who_needs_it="Businesses negotiating contracts, entrepreneurs creating formal agreements, companies needing contract review before signing.",
             typical_timeline="3-7 days",
             base_price=35000,
-            seo_title="Contract Drafting & Review - Simply Lawverse",
+            seo_title="Contract Drafting & Review - Simply Law",
             seo_description="Professional contract drafting and review services in Nigeria. Protect your business with well-drafted contracts.",
             seo_keywords="contract drafting, contract review, business contracts Nigeria, legal agreements",
             order=2,
@@ -127,7 +127,7 @@ def seed_services():
             who_needs_it="Growing companies, startups with investors, businesses facing regulatory changes, companies seeking governance upgrades.",
             typical_timeline="2-4 weeks",
             base_price=75000,
-            seo_title="Corporate Governance & Compliance - Simply Lawverse",
+            seo_title="Corporate Governance & Compliance - Simply Law",
             seo_description="Corporate governance and compliance advisory for Nigerian businesses. Ensure proper structure and regulatory compliance.",
             seo_keywords="corporate governance, compliance advice, business governance Nigeria",
             order=3,
@@ -152,7 +152,7 @@ def seed_services():
             who_needs_it="Businesses in regulated industries, companies facing new regulations, organizations seeking compliance clarity.",
             typical_timeline="1-3 weeks",
             base_price=40000,
-            seo_title="Regulatory Advisory - Simply Lawverse",
+            seo_title="Regulatory Advisory - Simply Law",
             seo_description="Expert regulatory advisory for Nigerian businesses. Industry-specific compliance guidance.",
             seo_keywords="regulatory compliance, industry regulations Nigeria",
             order=4,
@@ -177,7 +177,7 @@ def seed_services():
             who_needs_it="Buyers conducting acquisitions, businesses planning mergers, companies entering partnerships.",
             typical_timeline="2-6 weeks",
             base_price=100000,
-            seo_title="Due Diligence & Transaction Support - Simply Lawverse",
+            seo_title="Due Diligence & Transaction Support - Simply Law",
             seo_description="Professional due diligence and transaction support for Nigerian business deals.",
             seo_keywords="due diligence, M&A, business acquisition, transaction support",
             order=5,
@@ -205,7 +205,7 @@ def seed_services():
             who_needs_it="Startups with ongoing legal needs, SMEs managing multiple legal matters, growing companies on a budget.",
             typical_timeline="Ongoing",
             base_price=None,
-            seo_title="Legal Retainers for SMEs & Startups - Simply Lawverse",
+            seo_title="Legal Retainers for SMEs & Startups - Simply Law",
             seo_description="Flexible legal retainer packages for Nigerian startups and SMEs. Ongoing professional legal support.",
             seo_keywords="startup legal services, SME legal support, retainer agreement",
             order=6,

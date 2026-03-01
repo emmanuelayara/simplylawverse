@@ -1,4 +1,4 @@
-# Simply Lawverse 🇳🇬⚖️
+# Simply Law 🇳🇬⚖️
 
 **Professional Corporate Legal Services Website for Nigerian Lawyers**
 

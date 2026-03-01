@@ -16,7 +16,7 @@
                         <line x1="18" y1="52" x2="46" y2="52" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
                     <div class="flex flex-col">
-                        <span class="font-semibold text-lg text-law-dark">Simply Lawverse</span>
+                        <span class="font-semibold text-lg text-law-dark">Simply Law</span>
                         <span class="text-xs text-gray-500">Corporate Legal Services</span>
                     </div>
                 </a>
@@ -28,6 +28,8 @@
                 <a href="{{ url_for('services.index') }}" class="text-gray-700 hover:text-law-blue font-medium">Services</a>
                 <a href="{{ url_for('public.blog') }}" class="text-gray-700 hover:text-law-blue font-medium">Blog</a>
                 <a href="{{ url_for('public.about') }}" class="text-gray-700 hover:text-law-blue font-medium">About</a>
+                <a href="{{ url_for('contact.contact') }}" class="text-gray-700 hover:text-law-blue font-medium">Contact</a>
+                <a href="{{ url_for('articles.submit_article') }}" class="text-gray-700 hover:text-law-blue font-medium">Submit Article</a>
                 <a href="{{ url_for('bookings.index') }}" class="px-4 py-2 bg-law-blue text-white rounded hover:bg-opacity-90 transition">
                     Book Consultation
                 </a>
@@ -49,6 +51,8 @@
             <a href="{{ url_for('services.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-law-gray rounded">Services</a>
             <a href="{{ url_for('public.blog') }}" class="block px-4 py-2 text-gray-700 hover:bg-law-gray rounded">Blog</a>
             <a href="{{ url_for('public.about') }}" class="block px-4 py-2 text-gray-700 hover:bg-law-gray rounded">About</a>
+            <a href="{{ url_for('contact.contact') }}" class="block px-4 py-2 text-gray-700 hover:bg-law-gray rounded">Contact</a>
+            <a href="{{ url_for('articles.submit_article') }}" class="block px-4 py-2 text-gray-700 hover:bg-law-gray rounded">Submit Article</a>
             <a href="{{ url_for('bookings.index') }}" class="block px-4 py-2 bg-law-blue text-white rounded hover:bg-opacity-90">
                 Book Consultation
             </a>

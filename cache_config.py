@@ -99,9 +99,13 @@ def configure_caching(app: Flask):
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['X-XSS-Protection'] = '1; mode=block'
 
-        # Compression
-        if len(response.data) > 1024:  # Only compress if larger than 1KB
-            response.headers['Vary'] = 'Accept-Encoding'
+        # Compression - only for regular responses, not file passthrough
+        try:
+            if not getattr(response, 'direct_passthrough', False) and len(response.data) > 1024:
+                response.headers['Vary'] = 'Accept-Encoding'
+        except RuntimeError:
+            # Skip compression for file responses in passthrough mode
+            pass
 
         return response
 

@@ -201,11 +201,11 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
             flash('You must be logged in.', 'danger')
-            return redirect(url_for('admin_login'))
+            return redirect(url_for('auth.admin_login'))
         
         if not current_user.is_admin:
             flash('You do not have permission to access this page.', 'danger')
-            return redirect(url_for('home'))
+            return redirect(url_for('public.home'))
         
         return f(*args, **kwargs)
     

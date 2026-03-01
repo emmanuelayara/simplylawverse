@@ -1,5 +1,5 @@
 """
-Configuration management for Simply Lawverse
+Configuration management for Simply Law
 Handles development, testing, and production environments
 """
 import os
@@ -66,7 +66,7 @@ class Config:
     LOG_BACKUP_COUNT = int(os.environ.get('LOG_BACKUP_COUNT', 10))
     
     # Application Settings
-    APP_NAME = os.environ.get('APP_NAME', 'Simply Lawverse')
+    APP_NAME = os.environ.get('APP_NAME', 'Simply Law')
     APP_VERSION = os.environ.get('APP_VERSION', '1.0.0')
     ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@simplylawverse.com')
 

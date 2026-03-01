@@ -1,11 +1,11 @@
 """
-Logo component for Simply Lawverse
+Logo component for Simply Law
 Renders SVG logos for headers, documents, and branding
 """
 
 def render_logo(size='64', variant='full', color='black'):
     """
-    Render SVG logo for Simply Lawverse
+    Render SVG logo for Simply Law
     
     Args:
         size: Logo size in pixels (default 64)

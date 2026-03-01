@@ -70,17 +70,17 @@ def send_contact_confirmation_email(user_email, subject_line):
     Returns:
         bool: True if email sent successfully, False otherwise
     """
-    text_body = f'''Thank you for contacting Simply Lawverse!
+    text_body = f'''Thank you for contacting Simply Law!
 
 Your message with subject "{subject_line}" has been received.
 We will get back to you as soon as possible.
 
 Best regards,
-The Simply Lawverse Team
+The Simply Law Team
 '''
     
     return send_email(
-        subject='We received your message - Simply Lawverse',
+        subject='We received your message - Simply Law',
         recipients=[user_email],
         text_body=text_body
     )
