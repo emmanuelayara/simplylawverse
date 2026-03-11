@@ -176,7 +176,7 @@ def disapproved_articles():
 # MESSAGE VIEWING
 # ============================================================================
 
-@admin_bp.route('/messages')
+@admin_bp.route('/admin/messages')
 @login_required
 @admin_required
 def view_messages():

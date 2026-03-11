@@ -15,6 +15,10 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
+                <a href="{{ url_for('admin.view_messages') }}" class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-opacity-90 transition inline-flex items-center gap-2 text-sm">
+                    <i class="fas fa-envelope-open-text"></i>
+                    Messages
+                </a>
                 <a href="{{ url_for('admin.consultations') }}" class="px-4 py-2 bg-law-blue text-white font-semibold rounded-lg hover:bg-opacity-90 transition inline-flex items-center gap-2 text-sm">
                     <i class="fas fa-inbox"></i>
                     Consultations

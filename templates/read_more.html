@@ -76,6 +76,40 @@
         animation: fadeIn 0.5s ease-in-out;
     }
 
+    /* Modern Social Share Buttons */
+    .social-share-btn {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 2px solid;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .social-share-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: currentColor;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+        z-index: -1;
+    }
+
+    .social-share-btn:hover::before {
+        width: 100%;
+        height: 100%;
+    }
+
     /* Mobile Responsive Design */
     @media (max-width: 768px) {
         .article-content {
@@ -106,6 +140,11 @@
             padding: 0.75rem;
             margin: 1.25rem 0;
             font-size: 0.85rem;
+        }
+
+        .article-hero {
+            min-height: 300px;
+            padding: 2rem 0;
         }
     }
 
@@ -151,230 +190,330 @@
             font-size: 0.8rem;
             border-radius: 4px;
         }
+
+        .article-hero {
+            min-height: 250px;
+            padding: 1.5rem 0;
+        }
+
+        .article-hero h1 {
+            font-size: 1.75rem !important;
+        }
     }
 </style>
 
-<!-- Hero Header -->
-<section class="bg-gradient-to-r from-law-dark via-law-blue to-law-dark text-white py-8 md:py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Article Title -->
-        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">{{ article.title }}</h1>
-        
-        <!-- Article Meta -->
-        <div class="flex flex-wrap items-center gap-4 md:gap-6 text-gray-100">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-user-circle text-law-gold"></i>
-                <span class="font-semibold">{{ article.author }}</span>
+<!-- Modern Hero Section with Cover Image -->
+<section class="relative h-96 md:h-[500px] bg-gradient-to-br from-law-dark via-law-blue to-law-gold overflow-hidden">
+    {% if article.cover_image %}
+        <img src="{{ url_for('static', filename='uploads/' + article.cover_image) }}" 
+             alt="{{ article.title }}" 
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    {% else %}
+        <div class="absolute inset-0 bg-gradient-to-br from-law-blue to-law-dark opacity-80"></div>
+    {% endif %}
+    
+    <!-- Hero Content -->
+    <div class="absolute inset-0 flex flex-col justify-end">
+        <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 md:pb-12">
+            <!-- Category Badge -->
+            <div class="inline-block mb-4">
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-law-gold text-law-dark rounded-full text-sm font-bold shadow-lg">
+                    <i class="fas fa-bookmark"></i>
+                    {{ article.category or 'General' }}
+                </span>
             </div>
-            <div class="flex items-center gap-2">
-                <i class="fas fa-calendar-alt text-law-gold"></i>
-                <span>{{ article.date_posted.strftime('%B %d, %Y') if article.date_posted else 'Unpublished' }}</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <i class="fas fa-tag text-law-gold"></i>
-                <span class="bg-law-gold bg-opacity-20 px-3 py-1 rounded-full text-sm">{{ article.category or 'General' }}</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <i class="fas fa-eye text-law-gold"></i>
-                <span>{{ article.views or 0 }} views</span>
+            
+            <!-- Article Title -->
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                {{ article.title }}
+            </h1>
+            
+            <!-- Article Meta Info -->
+            <div class="flex flex-wrap items-center gap-6 text-white textsm md:text-base">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white bg-opacity-30 flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div>
+                        <span class="font-semibold">{{ article.author }}</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-calendar-alt text-law-gold"></i>
+                    <span>{{ article.date_posted.strftime('%B %d, %Y') if article.date_posted else 'Unpublished' }}</span>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-eye text-law-gold"></i>
+                    <span>{{ article.views or 0 }} views</span>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-heart text-red-400"></i>
+                    <span>{{ article.likes or 0 }} likes</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Main Content -->
-<section class="py-8 md:py-12 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Article Content -->
-        <div class="article-content prose prose-lg max-w-none mb-8 fade-in">
-            {{ article.content|linebreaks }}
-        </div>
+<!-- Main Content with Sidebar Layout -->
+<section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Article Content (2/3 width) -->
+            <div class="lg:col-span-2">
+                <!-- Content Card -->
+                <div class="bg-white rounded-xl shadow-lg p-8 md:p-12 fade-in border-t-4 border-law-blue">
+                    <article class="article-content prose prose-lg max-w-none">
+                        {{ article.content|linebreaks }}
+                    </article>
+                </div>
 
-        <!-- Divider -->
-        <div class="border-t-2 border-law-gray my-8"></div>
+                <!-- Action Section -->
+                <div class="mt-8 space-y-6">
+                    <!-- Like and Edit Buttons -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 border-l-4 border-red-500">
+                        <h3 class="text-xl font-bold text-law-dark mb-6 flex items-center gap-2">
+                            <i class="fas fa-star text-law-gold"></i>
+                            Engagement
+                        </h3>
+                        
+                        <div class="flex flex-wrap gap-3">
+                            <!-- Like Button -->
+                            <form action="{{ url_for('articles.like_article', article_id=article.id) }}" method="post">
+                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold rounded-lg transition transform hover:scale-105 shadow-md inline-flex items-center gap-2">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Like Article</span>
+                                    <span class="bg-white bg-opacity-30 px-3 py-1 rounded-full text-sm font-semibold">{{ article.likes or 0 }}</span>
+                                </button>
+                            </form>
+                            
+                            <!-- Edit Button (Author) -->
+                            {% if current_user.is_authenticated and current_user.username == article.author and article.status != 'approved' %}
+                                <a href="{{ url_for('articles.edit_article', article_id=article.id) }}" class="px-6 py-3 bg-gradient-to-r from-law-blue to-blue-600 hover:from-law-dark hover:to-blue-700 text-white font-bold rounded-lg transition transform hover:scale-105 shadow-md inline-flex items-center gap-2">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Edit Article</span>
+                                </a>
+                            {% endif %}
+                            
+                            <!-- Delete Button (Admin) -->
+                            {% if current_user.is_authenticated and current_user.is_admin %}
+                                <form method="POST" action="{{ url_for('articles.delete_article', article_id=article.id) }}" style="display: inline;" onclick="return confirm('Permanently delete this article?');">
+                                    <button type="submit" class="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold rounded-lg transition transform hover:scale-105 shadow-md inline-flex items-center gap-2">
+                                        <i class="fas fa-trash-alt"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <!-- Action Section -->
-        <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center mb-8">
-            <!-- Like Button -->
-            <form action="{{ url_for('articles.like_article', article_id=article.id) }}" method="post" style="display: inline;">
-                <button type="submit" class="px-6 py-3 bg-white border-2 border-red-500 text-red-500 font-semibold rounded-full hover:bg-red-500 hover:text-white transition inline-flex items-center gap-2">
-                    <i class="fas fa-heart"></i>
-                    <span>Like</span>
-                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-sm font-bold">{{ article.likes or 0 }}</span>
-                </button>
-            </form>
-            
-            <!-- Delete Button (for admins) -->
-            {% if current_user.is_authenticated and current_user.is_admin %}
-                <form method="POST" action="{{ url_for('articles.delete_article', article_id=article.id) }}" style="display: inline;" onclick="return confirm('Are you sure you want to delete this article permanently?');">
-                    <button type="submit" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full hover:shadow-lg transition inline-flex items-center gap-2">
-                        <i class="fas fa-trash"></i>
-                        <span>Delete Article</span>
-                    </button>
-                </form>
-            <!-- Edit Button (if author and not approved) -->
-            {% elif current_user.is_authenticated and current_user.username == article.author and article.status != 'approved' %}
-                <a href="{{ url_for('articles.edit_article', article_id=article.id) }}" class="px-6 py-3 bg-gradient-to-r from-law-blue to-blue-600 text-white font-semibold rounded-full hover:shadow-lg transition inline-flex items-center gap-2">
-                    <i class="fas fa-edit"></i>
-                    <span>Edit Article</span>
-                </a>
-            {% endif %}
-        </div>
+                    <!-- Share Section -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 border-l-4 border-law-blue">
+                        <h3 class="text-xl font-bold text-law-dark mb-6 flex items-center gap-2">
+                            <i class="fas fa-share-nodes text-law-blue"></i>
+                            Share This Article
+                        </h3>
+                        
+                        <div class="flex flex-wrap gap-4 mb-6">
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/?text={{ article.title }} - {{ request.url }}" 
+                               target="_blank" rel="noopener noreferrer"
+                               class="social-share-btn text-green-500 border-green-500 hover:text-white hover:bg-green-500"
+                               title="Share on WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
 
-        <!-- Share Section -->
-        <div class="bg-law-gray rounded-lg p-6 md:p-8 mb-8">
-            <h3 class="text-xl font-bold text-law-dark mb-4 flex items-center gap-2">
-                <i class="fas fa-share-alt text-law-blue"></i>
-                Share This Article
-            </h3>
-            
-            <div class="flex flex-wrap gap-4 mb-6">
-                <!-- WhatsApp -->
-                <a href="https://wa.me/?text={{ article.title }} - {{ request.url }}" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="w-12 h-12 rounded-full bg-white border-2 border-green-500 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition transform hover:scale-110 shadow-md"
-                   title="Share on WhatsApp">
-                    <i class="fab fa-whatsapp text-lg"></i>
-                </a>
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" 
+                               target="_blank" rel="noopener noreferrer"
+                               class="social-share-btn text-blue-600 border-blue-600 hover:text-white hover:bg-blue-600"
+                               title="Share on Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
 
-                <!-- Facebook -->
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="w-12 h-12 rounded-full bg-white border-2 border-blue-600 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition transform hover:scale-110 shadow-md"
-                   title="Share on Facebook">
-                    <i class="fab fa-facebook-f text-lg"></i>
-                </a>
+                            <!-- Twitter/X -->
+                            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ article.title }}" 
+                               target="_blank" rel="noopener noreferrer"
+                               class="social-share-btn text-gray-900 border-gray-900 hover:text-white hover:bg-gray-900"
+                               title="Share on X">
+                                <i class="fab fa-x-twitter"></i>
+                            </a>
 
-                <!-- Twitter/X -->
-                <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ article.title }}" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="w-12 h-12 rounded-full bg-white border-2 border-black text-black flex items-center justify-center hover:bg-black hover:text-white transition transform hover:scale-110 shadow-md"
-                   title="Share on X">
-                    <i class="fab fa-x-twitter text-lg"></i>
-                </a>
+                            <!-- LinkedIn -->
+                            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ article.title }}" 
+                               target="_blank" rel="noopener noreferrer"
+                               class="social-share-btn text-blue-700 border-blue-700 hover:text-white hover:bg-blue-700"
+                               title="Share on LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
 
-                <!-- LinkedIn -->
-                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ article.title }}" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="w-12 h-12 rounded-full bg-white border-2 border-blue-700 text-blue-700 flex items-center justify-center hover:bg-blue-700 hover:text-white transition transform hover:scale-110 shadow-md"
-                   title="Share on LinkedIn">
-                    <i class="fab fa-linkedin-in text-lg"></i>
-                </a>
+                            <!-- Email -->
+                            <a href="mailto:?subject={{ article.title }}&body={{ request.url }}" 
+                               class="social-share-btn text-gray-600 border-gray-600 hover:text-white hover:bg-gray-600"
+                               title="Share via Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
 
-                <!-- Email -->
-                <a href="mailto:?subject={{ article.title }}&body={{ request.url }}" 
-                   class="w-12 h-12 rounded-full bg-white border-2 border-gray-600 text-gray-600 flex items-center justify-center hover:bg-gray-600 hover:text-white transition transform hover:scale-110 shadow-md"
-                   title="Share via Email">
-                    <i class="fas fa-envelope text-lg"></i>
-                </a>
-
-                <!-- Copy Link -->
-                <button onclick="copyLink('{{ request.url }}')" 
-                        class="px-4 py-2 rounded-full bg-white border-2 border-law-blue text-law-blue font-semibold hover:bg-law-blue hover:text-white transition inline-flex items-center gap-2 shadow-md">
-                    <i class="fas fa-copy"></i>
-                    <span class="hidden sm:inline">Copy Link</span>
-                </button>
+                            <!-- Copy Link Button -->
+                            <button onclick="copyLink('{{ request.url }}')" 
+                                    class="social-share-btn text-law-blue border-law-blue hover:text-white hover:bg-law-blue"
+                                    title="Copy Link">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Copy Success Message -->
+                        <div id="copyMsg" class="hidden flex items-center gap-2 text-green-600 font-semibold bg-green-50 px-4 py-3 rounded-lg">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Link copied to clipboard!</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <!-- Copy Success Message -->
-            <div id="copyMsg" class="hidden flex items-center gap-2 text-green-600 font-semibold">
-                <i class="fas fa-check-circle"></i>
-                <span>Link copied to clipboard!</span>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Article Summary Card -->
+                <div class="sticky top-24 space-y-6">
+                    <!-- Quick Info -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-law-gold">
+                        <h4 class="text-lg font-bold text-law-dark mb-4 flex items-center gap-2">
+                            <i class="fas fa-info-circle text-law-gold"></i>
+                            Article Info
+                        </h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                                <span class="text-gray-600">Status</span>
+                                <span class="font-semibold text-law-dark capitalize">{{ article.status }}</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                                <span class="text-gray-600">Views</span>
+                                <span class="font-semibold text-law-blue">{{ article.views or 0 }}</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                                <span class="text-gray-600">Likes</span>
+                                <span class="font-semibold text-red-500">{{ article.likes or 0 }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Author</span>
+                                <span class="font-semibold text-law-dark">{{ article.author }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related/Navigation Card -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-law-blue">
+                        <h4 class="text-lg font-bold text-law-dark mb-4 flex items-center gap-2">
+                            <i class="fas fa-book text-law-blue"></i>
+                            Continue Reading
+                        </h4>
+                        <div class="space-y-2">
+                            <a href="{{ url_for('public.blog') }}" class="block px-4 py-2 bg-law-blue hover:bg-opacity-90 text-white font-semibold rounded-lg transition text-center">
+                                <i class="fas fa-arrow-left mr-2"></i>Back to Blog
+                            </a>
+                            <a href="{{ url_for('public.home') }}" class="block px-4 py-2 border-2 border-law-blue text-law-blue hover:bg-law-blue hover:text-white font-semibold rounded-lg transition text-center">
+                                <i class="fas fa-home mr-2"></i>Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Comments Section -->
-<section class="py-8 md:py-12 bg-law-gray">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Comment Form -->
-        <div class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
-            <h3 class="text-2xl font-bold text-law-dark mb-6 flex items-center gap-2">
-                <i class="fas fa-comment-dots text-law-blue"></i>
-                Leave a Comment
-            </h3>
-            
-            <form method="POST" action="{{ url_for('comments.post_comment', article_id=article.id) }}" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-law-dark mb-2">
-                        <i class="fas fa-user me-1 text-law-blue"></i>Your Name
-                    </label>
-                    <input type="text" 
-                           name="name" 
-                           placeholder="Enter your name" 
-                           required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-law-blue focus:ring-2 focus:ring-law-blue focus:ring-opacity-20">
-                </div>
+<section class="py-12 md:py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl">
+            <!-- Comment Form -->
+            <div class="bg-gradient-to-br from-law-gray to-gray-50 rounded-xl shadow-xl p-8 md:p-10 border-t-4 border-law-blue mb-12">
+                <h3 class="text-2xl md:text-3xl font-bold text-law-dark mb-8 flex items-center gap-3">
+                    <i class="fas fa-comment-dots text-law-blue text-3xl"></i>
+                    Leave a Comment
+                </h3>
+                
+                <form method="POST" action="{{ url_for('comments.post_comment', article_id=article.id) }}" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold text-law-dark mb-2">
+                            <i class="fas fa-user mr-2 text-law-blue"></i>Your Name
+                        </label>
+                        <input type="text" 
+                               name="name" 
+                               placeholder="Enter your full name" 
+                               required
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none focus:ring-2 focus:ring-law-blue focus:ring-opacity-20 transition">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-law-dark mb-2">
-                        <i class="fas fa-message me-1 text-law-blue"></i>Comment
-                    </label>
-                    <textarea name="comment" 
-                              rows="4" 
-                              placeholder="Share your thoughts..." 
-                              required
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-law-blue focus:ring-2 focus:ring-law-blue focus:ring-opacity-20 resize-none"></textarea>
-                </div>
+                    <div>
+                        <label class="block text-sm font-bold text-law-dark mb-2">
+                            <i class="fas fa-comment-dots mr-2 text-law-blue"></i>Comment
+                        </label>
+                        <textarea name="comment" 
+                                  rows="5" 
+                                  placeholder="Share your thoughts on this article..." 
+                                  required
+                                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-law-blue focus:outline-none focus:ring-2 focus:ring-law-blue focus:ring-opacity-20 transition resize-none"></textarea>
+                    </div>
 
-                <div class="flex justify-end">
-                    <button type="submit" class="px-6 py-3 bg-gradient-to-r from-law-blue to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transition inline-flex items-center gap-2">
-                        <i class="fas fa-paper-plane"></i>
-                        Post Comment
-                    </button>
-                </div>
-            </form>
-        </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-8 py-3 bg-gradient-to-r from-law-blue to-blue-600 hover:from-law-dark hover:to-blue-700 text-white font-bold rounded-lg transition transform hover:scale-105 shadow-lg inline-flex items-center gap-2">
+                            <i class="fas fa-paper-plane"></i>
+                            Post Comment
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-        <!-- Comments Display -->
-        <div class="space-y-6">
+            <!-- Comments Display -->
             {% if paginated_comments.items %}
-                <h3 class="text-2xl font-bold text-law-dark mb-6 flex items-center gap-3">
-                    <i class="fas fa-comments text-law-blue"></i>
+                <h3 class="text-2xl md:text-3xl font-bold text-law-dark mb-8 flex items-center gap-3">
+                    <i class="fas fa-comments text-law-blue text-3xl"></i>
                     Comments
-                    <span class="bg-law-blue text-white px-3 py-1 rounded-full text-sm font-semibold">{{ paginated_comments.total }}</span>
+                    <span class="bg-law-blue text-white px-4 py-2 rounded-full text-lg font-bold">{{ paginated_comments.total }}</span>
                 </h3>
 
-                <div class="space-y-4">
+                <div class="space-y-6">
                     {% for comment in paginated_comments.items %}
                         {% if not comment.is_deleted() %}
-                            <div id="comment-{{ comment.id }}" class="bg-white rounded-lg shadow-md p-6 border-l-4 border-law-blue hover:shadow-lg transition">
+                            <div id="comment-{{ comment.id }}" class="bg-white rounded-xl shadow-md p-6 md:p-8 border-l-4 border-law-blue hover:shadow-lg transition">
                                 <!-- Comment Header -->
-                                <div class="flex items-start justify-between mb-3">
-                                    <div>
-                                        <div class="flex items-center gap-2 mb-1">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-12 h-12 rounded-full bg-law-blue bg-opacity-10 flex items-center justify-center flex-shrink-0">
                                             <i class="fas fa-user-circle text-law-blue text-xl"></i>
-                                            <span class="font-bold text-law-dark">{{ comment.name }}</span>
                                         </div>
-                                        <div class="flex items-center gap-2 text-xs text-gray-500">
-                                            <i class="far fa-clock"></i>
-                                            <span>{{ comment.date_posted.strftime('%B %d, %Y at %I:%M %p') if comment.date_posted else '' }}</span>
+                                        <div>
+                                            <h4 class="font-bold text-law-dark text-lg">{{ comment.name }}</h4>
+                                            <div class="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                                                <i class="fas fa-clock"></i>
+                                                <span>{{ comment.date_posted.strftime('%B %d, %Y at %I:%M %p') if comment.date_posted else '' }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Comment Content -->
-                                <p class="text-gray-700 mb-4 leading-relaxed">{{ comment.content }}</p>
+                                <p class="text-gray-700 mb-5 leading-relaxed py-4">{{ comment.content }}</p>
 
                                 <!-- Action Buttons -->
-                                <div class="flex flex-wrap gap-2 items-center">
+                                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
                                     <button type="button" 
-                                            class="reply-btn px-4 py-2 text-sm font-semibold text-law-blue border border-law-blue rounded-lg hover:bg-law-blue hover:text-white transition"
+                                            class="reply-btn px-4 py-2 text-sm font-bold text-law-blue border-2 border-law-blue rounded-lg hover:bg-law-blue hover:text-white transition inline-flex items-center gap-2"
                                             data-comment-id="{{ comment.id }}">
-                                        <i class="fas fa-reply me-1"></i>Reply
+                                        <i class="fas fa-reply"></i>Reply
                                     </button>
 
                                     {% if current_user.is_authenticated and (current_user.is_admin or current_user.username == comment.name) %}
                                         <form method="POST" action="{{ url_for('comments.soft_delete_comment', comment_id=comment.id) }}" style="display: inline;">
                                             <button type="submit" 
-                                                    class="px-4 py-2 text-sm font-semibold text-red-600 border border-red-600 rounded-lg hover:bg-red-600 hover:text-white transition"
+                                                    class="px-4 py-2 text-sm font-bold text-red-600 border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white transition inline-flex items-center gap-2"
                                                     onclick="return confirm('Delete this comment?')">
-                                                <i class="fas fa-trash me-1"></i>Delete
+                                                <i class="fas fa-trash"></i>Delete
                                             </button>
                                         </form>
                                     {% endif %}
@@ -382,23 +521,23 @@
 
                                 <!-- Replies Section -->
                                 {% if comment.replies.count() > 0 %}
-                                    <div class="mt-4 ml-4 pl-4 border-l-2 border-gray-300">
-                                        <p class="text-sm font-semibold text-gray-600 mb-3">
-                                            <i class="fas fa-reply-all me-1"></i>{{ comment.replies.count() }} Reply(ies)
+                                    <div class="mt-6 ml-0 md:ml-6 pl-4 md:pl-6 border-l-2 border-law-blue bg-gray-50 rounded-lg p-4">
+                                        <p class="text-sm font-bold text-law-dark mb-4 flex items-center gap-2">
+                                            <i class="fas fa-reply-all text-law-blue"></i>{{ comment.replies.count() }} Reply(ies)
                                         </p>
 
-                                        <div class="space-y-3">
+                                        <div class="space-y-4">
                                             {% for reply in comment.replies %}
                                                 {% if not reply.is_deleted() %}
-                                                    <div class="bg-gray-50 rounded-lg p-4 border-l-4 border-green-500">
-                                                        <div class="flex items-start justify-between mb-2">
+                                                    <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+                                                        <div class="flex items-start gap-3 mb-2">
+                                                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 text-center">
+                                                                <i class="fas fa-user-circle text-green-600"></i>
+                                                            </div>
                                                             <div>
-                                                                <div class="font-semibold text-law-dark text-sm flex items-center gap-2">
-                                                                    <i class="fas fa-user-circle text-green-500"></i>
-                                                                    {{ reply.name }}
-                                                                </div>
+                                                                <div class="font-bold text-law-dark">{{ reply.name }}</div>
                                                                 <div class="text-xs text-gray-500 mt-1">
-                                                                    <i class="far fa-clock me-1"></i>
+                                                                    <i class="far fa-clock mr-1"></i>
                                                                     {{ reply.date_posted.strftime('%B %d, %Y at %I:%M %p') if reply.date_posted else '' }}
                                                                 </div>
                                                             </div>
@@ -408,9 +547,9 @@
                                                         {% if current_user.is_authenticated and (current_user.is_admin or current_user.username == reply.name) %}
                                                             <form method="POST" action="{{ url_for('comments.soft_delete_comment', comment_id=reply.id) }}" style="display: inline;">
                                                                 <button type="submit" 
-                                                                        class="text-xs font-semibold text-red-600 hover:text-red-800"
+                                                                        class="text-xs font-bold text-red-600 hover:text-red-800 inline-flex items-center gap-1"
                                                                         onclick="return confirm('Delete this reply?')">
-                                                                    <i class="fas fa-trash me-1"></i>Delete
+                                                                    <i class="fas fa-trash"></i>Delete
                                                                 </button>
                                                             </form>
                                                         {% endif %}
@@ -424,38 +563,38 @@
                                 <!-- Reply Form (Hidden by default) -->
                                 <form method="POST" 
                                       action="{{ url_for('comments.reply_to_comment', parent_id=comment.id) }}" 
-                                      class="reply-form hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-300"
+                                      class="reply-form hidden mt-6 p-5 bg-law-blue bg-opacity-5 rounded-lg border-2 border-law-blue"
                                       id="reply-form-{{ comment.id }}">
-                                    <div class="space-y-3">
+                                    <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-semibold text-law-dark mb-1">Your Name</label>
+                                            <label class="block text-sm font-bold text-law-dark mb-2">Your Name</label>
                                             <input type="text" 
                                                    name="name" 
                                                    placeholder="Enter your name" 
                                                    required
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-law-blue">
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-law-blue focus:outline-none focus:ring-2 focus:ring-law-blue focus:ring-opacity-20 transition">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-semibold text-law-dark mb-1">Email (optional)</label>
+                                            <label class="block text-sm font-bold text-law-dark mb-2">Email (optional)</label>
                                             <input type="email" 
                                                    name="email" 
                                                    placeholder="your@email.com"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-law-blue">
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-law-blue focus:outline-none focus:ring-2 focus:ring-law-blue focus:ring-opacity-20 transition">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-semibold text-law-dark mb-1">Reply</label>
+                                            <label class="block text-sm font-bold text-law-dark mb-2">Reply</label>
                                             <textarea name="reply" 
-                                                      rows="3" 
+                                                      rows="4" 
                                                       placeholder="Write your reply..." 
                                                       required
-                                                      class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-law-blue resize-none"></textarea>
+                                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-law-blue focus:outline-none focus:ring-2 focus:ring-law-blue focus:ring-opacity-20 transition resize-none"></textarea>
                                         </div>
-                                        <div class="flex gap-2 justify-end">
-                                            <button type="button" class="cancel-reply px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded hover:bg-gray-200 transition">
+                                        <div class="flex gap-2 justify-end pt-2">
+                                            <button type="button" class="cancel-reply px-5 py-2 font-bold text-gray-700 border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition">
                                                 Cancel
                                             </button>
-                                            <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-law-blue rounded hover:bg-law-dark transition">
-                                                <i class="fas fa-reply me-1"></i>Reply
+                                            <button type="submit" class="px-5 py-2 font-bold text-white bg-law-blue rounded-lg hover:bg-law-dark transition inline-flex items-center gap-2">
+                                                <i class="fas fa-reply"></i>Reply
                                             </button>
                                         </div>
                                     </div>
@@ -504,7 +643,6 @@
                     <p class="text-gray-600 font-semibold text-lg">No comments yet. Be the first to share your thoughts!</p>
                 </div>
             {% endif %}
-        </div>
     </div>
 </section>
 
